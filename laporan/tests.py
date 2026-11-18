@@ -124,3 +124,44 @@ class LaporanTests(TestCase):
         })
         lap3 = Laporan.objects.get(judul="Wifi Lemah")
         self.assertEqual(lap3.kategori, "jaringan-internet")
+
+    def test_laporan_anonim_dan_kebersihan(self):
+        self.client.login(username="rani", password="x12345678")
+        resp = self.client.post(reverse("buat"), {
+            "lokasi": "Kantin Kampus",
+            "kategori": "Kebersihan & Sampah",
+            "judul": "Sampah meluber di dekat wastafel",
+            "deskripsi": "Banyak sisa makanan berceceran",
+            "urgensi": 3,
+            "is_anonim": "on",
+        })
+        self.assertEqual(resp.status_code, 302)
+        lap = Laporan.objects.get(judul="Sampah meluber di dekat wastafel")
+        self.assertEqual(lap.kategori, "kebersihan")
+        self.assertTrue(lap.is_anonim)
+        # Tampilan untuk publik adalah anonim
+        self.assertEqual(lap.pelapor_display(), "Warga Kampus (Anonim)")
+        # Tampilan untuk staf menampilkan username pelapor
+        self.assertIn("rani", lap.pelapor_display(self.staf))
+
+    def test_tambah_komentar(self):
+        laporan = self.buat()
+        self.client.login(username="rani", password="x12345678")
+        resp = self.client.post(reverse("tambah_komentar", args=[laporan.pk]), {
+            "isi": "Sudah mulai ditangani oleh staf tadi siang."
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(laporan.komentar.count(), 1)
+        self.assertEqual(laporan.komentar.first().isi, "Sudah mulai ditangani oleh staf tadi siang.")
+
+    def test_ekspor_csv_khusus_staf(self):
+        self.buat()
+        # Mahasiswa dilarang
+        self.client.login(username="rani", password="x12345678")
+        self.assertEqual(self.client.get(reverse("ekspor_csv")).status_code, 302)
+        # Staf diizinkan dan menerima file CSV
+        self.client.login(username="staf", password="x12345678")
+        resp = self.client.get(reverse("ekspor_csv"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn("text/csv", resp["Content-Type"])
+        self.assertIn("attachment", resp["Content-Disposition"])

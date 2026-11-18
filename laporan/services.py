@@ -6,11 +6,14 @@ from .models import Laporan, RiwayatStatus
 
 def skor_prioritas(laporan):
     """Urgensi (20/tingkat) + dukungan (5 each) + lama menunggu (3/hari), maks 100.
-    Fasilitas aksesibilitas mendapat tambahan 15."""
+    Fasilitas aksesibilitas mendapat tambahan 15.
+    Isu kebersihan dan keamanan yang mendesak mendapat tambahan 10."""
     hari = (timezone.now() - laporan.dibuat).days
     skor = laporan.urgensi * 20 + laporan.pendukung.count() * 5 + hari * 3
     if laporan.kategori == "aksesibilitas":
         skor += 15
+    elif laporan.kategori in ["keamanan", "kebersihan"] and laporan.urgensi >= 2:
+        skor += 10
     return min(skor, 100)
 
 
@@ -23,7 +26,7 @@ def cari_duplikat(lokasi, kategori):
     return list(Laporan.objects.filter(lokasi=lokasi, kategori=kategori).exclude(status="selesai"))
 
 
-def catat_status(laporan, status, oleh, catatan="", foto_perbaikan=None):
+def catat_status(laporan, status, oleh, catatan="", foto_perbaikan=None, target_selesai=None):
     laporan.status = status
     update_fields = ["status"]
     if foto_perbaikan:
@@ -32,6 +35,9 @@ def catat_status(laporan, status, oleh, catatan="", foto_perbaikan=None):
     if catatan:
         laporan.catatan_perbaikan = catatan
         update_fields.append("catatan_perbaikan")
+    if target_selesai:
+        laporan.target_selesai = target_selesai
+        update_fields.append("target_selesai")
     if status == "selesai":
         laporan.selesai_pada = timezone.now()
         laporan.petugas = oleh

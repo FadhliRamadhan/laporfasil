@@ -15,8 +15,16 @@ class Lokasi(models.Model):
 
 
 class Laporan(models.Model):
-    KATEGORI = [("ac", "AC dan pendingin"), ("listrik", "Listrik"), ("air", "Air dan toilet"),
-                ("aksesibilitas", "Aksesibilitas"), ("lainnya", "Lainnya")]
+    KATEGORI = [
+        ("kebersihan", "Kebersihan & Sampah"),
+        ("ac", "AC dan Pendingin"),
+        ("listrik", "Listrik & Lampu"),
+        ("air", "Air & Toilet"),
+        ("sarana", "Furnitur & Sarana"),
+        ("keamanan", "Keamanan & Bahaya"),
+        ("aksesibilitas", "Aksesibilitas"),
+        ("lainnya", "Lainnya"),
+    ]
     URGENSI = [(1, "Rendah"), (2, "Sedang"), (3, "Tinggi")]
     STATUS = [("dilaporkan", "Dilaporkan"), ("diverifikasi", "Diverifikasi"),
               ("dikerjakan", "Dikerjakan"), ("selesai", "Selesai")]
@@ -31,6 +39,8 @@ class Laporan(models.Model):
     status = models.CharField(max_length=20, choices=STATUS, default="dilaporkan")
     dibuat = models.DateTimeField(auto_now_add=True)
     pendukung = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="dukungan", blank=True)
+    is_anonim = models.BooleanField("Laporkan sebagai Anonim", default=False)
+    target_selesai = models.DateField("Target Selesai Perbaikan", null=True, blank=True)
     foto_perbaikan = models.ImageField("Foto hasil perbaikan", upload_to="perbaikan/", blank=True, null=True)
     catatan_perbaikan = models.TextField("Catatan perbaikan", blank=True, default="")
     petugas = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, related_name="tindakan_perbaikan")
@@ -46,6 +56,13 @@ class Laporan(models.Model):
     def get_kategori_display(self):
         return dict(self.KATEGORI).get(self.kategori, self.kategori.replace("-", " ").title())
 
+    def pelapor_display(self, user=None):
+        if self.is_anonim:
+            if user and getattr(user, "is_staff", False):
+                return f"{self.pelapor.username} (Anonim)"
+            return "Warga Kampus (Anonim)"
+        return self.pelapor.username
+
 
 class RiwayatStatus(models.Model):
     laporan = models.ForeignKey(Laporan, on_delete=models.CASCADE, related_name="riwayat")
@@ -57,3 +74,37 @@ class RiwayatStatus(models.Model):
 
     class Meta:
         ordering = ["waktu", "id"]
+
+
+class Komentar(models.Model):
+    laporan = models.ForeignKey(Laporan, on_delete=models.CASCADE, related_name="komentar")
+    penulis = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    isi = models.TextField("Isi komentar / info pembaruan")
+    dibuat = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["dibuat", "id"]
+        verbose_name_plural = "komentar"
+
+    def __str__(self):
+        return f"Komentar oleh {self.penulis.username} pada #{self.laporan_id}"
+
+
+class Pengumuman(models.Model):
+    TIPE = [
+        ("info", "Informasi Umum"),
+        ("pemeliharaan", "Jadwal Pemeliharaan"),
+        ("darurat", "Penting / Perhatian"),
+    ]
+    judul = models.CharField(max_length=200)
+    isi = models.TextField()
+    tipe = models.CharField(max_length=20, choices=TIPE, default="info")
+    aktif = models.BooleanField(default=True)
+    dibuat = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-dibuat"]
+        verbose_name_plural = "pengumuman"
+
+    def __str__(self):
+        return self.judul

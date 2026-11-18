@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import Laporan, Lokasi, RiwayatStatus
+from .models import Komentar, Laporan, Lokasi, Pengumuman, RiwayatStatus
 
-admin.site.register([Lokasi, Laporan, RiwayatStatus])
+admin.site.register([Lokasi, Laporan, RiwayatStatus, Komentar, Pengumuman])

@@ -1,3 +1,5 @@
+import csv
+import datetime
 import io
 
 import qrcode
@@ -13,25 +15,27 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from . import services
-from .forms import LaporanForm, PerbaikanForm
-from .models import Laporan, Lokasi
+from .forms import KomentarForm, LaporanForm, PengumumanForm, PerbaikanForm
+from .models import Komentar, Laporan, Lokasi, Pengumuman
 
 staf_only = user_passes_test(lambda u: u.is_staff, login_url="login")
 
 
 def beranda(request):
-    qs = Laporan.objects.select_related("lokasi")
+    qs = Laporan.objects.select_related("lokasi", "pelapor")
     kategori = request.GET.get("kategori")
     if kategori:
         qs = qs.filter(kategori=kategori)
     awal_bulan = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    pengumuman_list = Pengumuman.objects.filter(aktif=True)[:3]
     return render(request, "beranda.html", {
         "aktif": Laporan.objects.exclude(status="selesai").count(),
         "selesai_bulan": Laporan.objects.filter(
             status="selesai", riwayat__status="selesai", riwayat__waktu__gte=awal_bulan).distinct().count(),
-        "terbaru": [services.dengan_skor(l) for l in qs[:6]],
+        "terbaru": [services.dengan_skor(l) for l in qs[:8]],
         "kategori_list": Laporan.KATEGORI,
         "kategori": kategori,
+        "pengumuman_list": pengumuman_list,
     })
 
 
@@ -60,13 +64,26 @@ def buat(request):
 
 def detail(request, pk):
     laporan = services.dengan_skor(
-        get_object_or_404(Laporan.objects.select_related("lokasi", "pelapor"), pk=pk))
+        get_object_or_404(Laporan.objects.select_related("lokasi", "pelapor", "petugas"), pk=pk))
     return render(request, "detail.html", {
         "l": laporan,
         "riwayat": laporan.riwayat.select_related("oleh"),
+        "komentar_list": laporan.komentar.select_related("penulis"),
+        "komentar_form": KomentarForm(),
         "mendukung": request.user.is_authenticated and laporan.pendukung.filter(pk=request.user.pk).exists(),
         "status_list": Laporan.STATUS,
     })
+
+
+@login_required
+@require_POST
+def tambah_komentar(request, pk):
+    laporan = get_object_or_404(Laporan, pk=pk)
+    isi = request.POST.get("isi", "").strip()
+    if isi:
+        Komentar.objects.create(laporan=laporan, penulis=request.user, isi=isi)
+        messages.success(request, "Tanggapan Anda berhasil ditambahkan.")
+    return redirect("detail", pk=pk)
 
 
 @login_required
@@ -86,9 +103,16 @@ def ubah_status(request, pk):
     laporan = get_object_or_404(Laporan, pk=pk)
     status = request.POST.get("status")
     catatan = request.POST.get("catatan_perbaikan", "").strip()
+    target_selesai_val = request.POST.get("target_selesai")
+    target_selesai = None
+    if target_selesai_val:
+        try:
+            target_selesai = datetime.date.fromisoformat(target_selesai_val)
+        except (ValueError, TypeError):
+            pass
     foto = request.FILES.get("foto_perbaikan")
     if status in dict(Laporan.STATUS):
-        services.catat_status(laporan, status, request.user, catatan=catatan, foto_perbaikan=foto)
+        services.catat_status(laporan, status, request.user, catatan=catatan, foto_perbaikan=foto, target_selesai=target_selesai)
         status_label = dict(Laporan.STATUS).get(status)
         pesan = f"Status laporan '{laporan.judul}' diperbarui ke '{status_label}'."
         if foto:
@@ -109,8 +133,9 @@ def upload_perbaikan(request, pk):
             laporan = form.save(commit=False)
             status = form.cleaned_data["status"]
             catatan = form.cleaned_data["catatan_perbaikan"]
+            target = form.cleaned_data.get("target_selesai")
             foto = form.cleaned_data.get("foto_perbaikan")
-            services.catat_status(laporan, status, request.user, catatan=catatan, foto_perbaikan=foto)
+            services.catat_status(laporan, status, request.user, catatan=catatan, foto_perbaikan=foto, target_selesai=target)
             messages.success(request, f"Hasil perbaikan laporan '{laporan.judul}' berhasil disimpan.")
             return redirect("dashboard")
     else:
@@ -191,7 +216,56 @@ def dashboard(request):
         "urgensi_filter": urgensi_filter,
         "q": q,
         "galeri_selesai": galeri_selesai,
+        "pengumuman_list": Pengumuman.objects.all()[:5],
+        "pengumuman_form": PengumumanForm(),
     })
+
+
+@staf_only
+@require_POST
+def tambah_pengumuman(request):
+    form = PengumumanForm(request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Pengumuman pemeliharaan / informasi kampus berhasil dipublikasikan.")
+    return redirect("dashboard")
+
+
+@staf_only
+def ekspor_csv(request):
+    response = HttpResponse(content_type="text/csv; charset=utf-8-sig")
+    waktu_str = timezone.now().strftime("%Y%m%d_%H%M")
+    response["Content-Disposition"] = f'attachment; filename="laporfasil_{waktu_str}.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        "ID", "Waktu Lapor", "Judul", "Kategori", "Lokasi", "Gedung",
+        "Urgensi", "Status", "Skor Prioritas", "Pelapor", "Anonim", "Pendukung",
+        "Target Selesai", "Selesai Pada", "Petugas", "Catatan Perbaikan", "Deskripsi"
+    ])
+
+    for l in Laporan.objects.select_related("lokasi", "pelapor", "petugas").order_by("-dibuat"):
+        l = services.dengan_skor(l)
+        writer.writerow([
+            l.pk,
+            l.dibuat.strftime("%Y-%m-%d %H:%M"),
+            l.judul,
+            l.get_kategori_display(),
+            l.lokasi.nama,
+            l.lokasi.gedung,
+            l.get_urgensi_display(),
+            l.get_status_display(),
+            l.skor,
+            l.pelapor.username,
+            "Ya" if l.is_anonim else "Tidak",
+            l.pendukung.count(),
+            l.target_selesai.strftime("%Y-%m-%d") if l.target_selesai else "-",
+            l.selesai_pada.strftime("%Y-%m-%d %H:%M") if l.selesai_pada else "-",
+            l.petugas.username if l.petugas else "-",
+            l.catatan_perbaikan.replace("\n", " ") if l.catatan_perbaikan else "-",
+            l.deskripsi.replace("\n", " "),
+        ])
+    return response
 
 
 @staf_only

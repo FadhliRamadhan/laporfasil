@@ -1,18 +1,85 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="hero"><h1>Ada fasilitas rusak?</h1><p>Laporkan dalam hitungan detik dan pantau perbaikannya.</p><a class="btn alt" href="{% url 'buat' %}">Buat laporan</a></section>
+<section class="hero" style="background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);">
+  <h1>Ada fasilitas rusak, tempat kotor, atau kendala kampus?</h1>
+  <p>Laporkan kerusakan fisik, kebersihan lingkungan, keamanan, atau sarana belajar dalam hitungan detik. Pantau penanganannya secara transparan.</p>
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
+    <a class="btn alt" href="{% url 'buat' %}" style="font-weight:700;">➕ Buat Laporan Sekarang</a>
+    {% if user.is_staff %}
+    <a class="btn sm" href="{% url 'dashboard' %}" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); line-height:42px;">📊 Buka Dashboard Staf</a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- PENGUMUMAN PEMELIHARAAN KAMPUS -->
+{% if pengumuman_list %}
+<div style="margin: 20px 0;">
+  {% for p in pengumuman_list %}
+  <div class="card" style="margin-bottom:10px; border-left: 5px solid {% if p.tipe == 'darurat' %}#DC2626{% elif p.tipe == 'pemeliharaan' %}#D97706{% else %}#2563EB{% endif %}; background:#F8FAFC;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+      <div style="flex:1;">
+        <span class="badge" style="background:{% if p.tipe == 'darurat' %}#FEE2E2; color:#991B1B{% elif p.tipe == 'pemeliharaan' %}#FEF3C7; color:#92400E{% else %}#E0F2FE; color:#0369A1{% endif %}; margin-bottom:6px;">
+          📢 {{ p.get_tipe_display }}
+        </span>
+        <h3 style="margin:4px 0 6px; font-size:16px;">{{ p.judul }}</h3>
+        <p style="margin:0; font-size:14px; color:#4B5563; line-height:1.4;">{{ p.isi }}</p>
+      </div>
+      <small class="mu" style="font-size:12px;">{{ p.dibuat|date:"d M Y" }}</small>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- METRIK SINGKAT -->
 <div class="grid">
-<div class="card"><p class="mu">Laporan aktif</p><p class="num">{{ aktif }}</p></div>
-<div class="card"><p class="mu">Selesai bulan ini</p><p class="num">{{ selesai_bulan }}</p></div>
+  <div class="card"><p class="mu">Laporan Aktif</p><p class="num">{{ aktif }}</p></div>
+  <div class="card"><p class="mu">Selesai Bulan Ini</p><p class="num">{{ selesai_bulan }}</p></div>
 </div>
+
+<!-- KATEGORI CHIPS DENGAN IKON -->
 <div class="chips">
-<a class="chip {% if not kategori %}on{% endif %}" href="{% url 'beranda' %}">Semua</a>
-{% for kode, nama in kategori_list %}<a class="chip {% if kode == kategori %}on{% endif %}" href="?kategori={{ kode }}">{{ nama }}</a>{% endfor %}
+  <a class="chip {% if not kategori %}on{% endif %}" href="{% url 'beranda' %}">🌐 Semua Isu</a>
+  {% for kode, nama in kategori_list %}
+  <a class="chip {% if kode == kategori %}on{% endif %}" href="?kategori={{ kode }}">
+    {% if kode == 'kebersihan' %}🧹
+    {% elif kode == 'ac' %}❄️
+    {% elif kode == 'listrik' %}⚡
+    {% elif kode == 'air' %}🚰
+    {% elif kode == 'sarana' %}🪑
+    {% elif kode == 'keamanan' %}🦺
+    {% elif kode == 'aksesibilitas' %}♿
+    {% else %}📦{% endif %}
+    {{ nama }}
+  </a>
+  {% endfor %}
 </div>
+
+<!-- LAPORAN TERBARU -->
 <div class="card">
-{% for l in terbaru %}
-<div class="row"><div><a class="t" href="{% url 'detail' l.pk %}">{{ l.judul }}</a><p class="mu">{{ l.lokasi }} · {{ l.pendukung.count }} pendukung</p></div>
-<div><span class="pill skor">Skor {{ l.skor }}</span> <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span></div></div>
-{% empty %}<p class="mu">Belum ada laporan di kategori ini.</p>{% endfor %}
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--ln); padding-bottom:10px;">
+    <h2 style="margin:0; font-size:17px;">Laporan Terkini</h2>
+    <span class="mu" style="font-size:13px;">Dukungan warga menaikkan prioritas penanganan</span>
+  </div>
+
+  {% for l in terbaru %}
+  <div class="row">
+    <div style="flex:1; min-width:200px;">
+      <a class="t" href="{% url 'detail' l.pk %}" style="font-size:16px;">{{ l.judul }}</a>
+      <p class="mu" style="margin:2px 0 0; font-size:13px;">
+        📍 {{ l.lokasi }} &nbsp;•&nbsp; 
+        🏷️ {{ l.get_kategori_display }} &nbsp;•&nbsp; 
+        👤 {{ l.pelapor_display }} &nbsp;•&nbsp; 
+        👥 {{ l.pendukung.count }} dukungan
+      </p>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span class="pill skor">Skor {{ l.skor }}</span>
+      <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span>
+    </div>
+  </div>
+  {% empty %}
+  <p class="mu" style="text-align:center; padding:20px 0;">Belum ada laporan di kategori ini.</p>
+  {% endfor %}
 </div>
 {% endblock %}
