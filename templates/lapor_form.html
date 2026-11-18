@@ -1,14 +1,56 @@
 {% extends "base.html" %}
-{% block title %}Buat laporan{% endblock %}
+{% block title %}Buat Laporan - LaporFasil{% endblock %}
+
 {% block content %}
-<h1>Buat laporan</h1>
-<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
-{% if duplikat %}
-<div class="warn"><strong>Sudah ada laporan serupa di lokasi ini.</strong> Dukung laporan yang ada agar prioritasnya naik, atau kirim laporan baru.
-<ul>{% for d in duplikat %}<li><a href="{% url 'detail' d.pk %}">{{ d.judul }}</a> ({{ d.get_status_display }})</li>{% endfor %}</ul>
-<button name="tetap_kirim" value="1">Tetap kirim laporan baru</button></div>
-{% endif %}
-{{ form.as_p }}
-<button type="submit">Kirim laporan</button>
-</form>
+<div style="max-width: 640px; margin: auto;">
+  <h1 style="margin-bottom: 8px;">Buat Laporan Fasilitas</h1>
+  <p class="mu" style="margin-bottom: 20px;">Laporkan fasilitas yang rusak atau membutuhkan perbaikan di lingkungan kampus.</p>
+
+  {% if duplikat %}
+  <div class="warn">
+    <strong>⚠️ Terdeteksi laporan serupa di lokasi ini.</strong>
+    <p style="margin: 6px 0 10px;">Sebelum mengirim laporan baru, Anda disarankan mendukung laporan yang sudah ada agar prioritas penanganannya meningkat:</p>
+    <ul style="margin: 0 0 12px; padding-left: 20px;">
+      {% for d in duplikat %}
+      <li>
+        <a href="{% url 'detail' d.pk %}" style="font-weight:600;">{{ d.judul }}</a> 
+        <span class="pill s-{{ d.status }}" style="font-size:11px; margin-left:6px;">{{ d.get_status_display }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    <form method="post" enctype="multipart/form-data" style="margin:0;">
+      {% csrf_token %}
+      {% for field in form %}
+        {% if field.name == 'foto' %}
+        <!-- file input can't be easily forwarded via hidden input -->
+        {% else %}
+        <input type="hidden" name="{{ field.name }}" value="{{ field.value|default:'' }}">
+        {% endif %}
+      {% endfor %}
+      <button name="tetap_kirim" value="1" class="btn sm alt" style="border: 1px solid #D97706; color: #B45309;">
+        Tetap kirim laporan baru ini
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="card" style="padding: 24px;">
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+
+    <!-- DATALIST UNTUK AUTOCOMPLETE KETIK LOKASI -->
+    <datalist id="daftar-lokasi">
+      {% for lok in semua_lokasi %}
+      <option value="{{ lok }}"></option>
+      <option value="{{ lok.nama }}"></option>
+      {% endfor %}
+    </datalist>
+
+    <div style="margin-top: 24px; display: flex; gap: 12px; align-items: center;">
+      <button type="submit" class="btn" style="flex: 1;">Kirim Laporan</button>
+      <a href="{% url 'beranda' %}" class="btn alt" style="border: 1px solid var(--ln);">Batal</a>
+    </div>
+  </form>
+</div>
 {% endblock %}

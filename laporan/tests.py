@@ -62,3 +62,30 @@ class LaporanTests(TestCase):
         # Staf diizinkan
         self.client.login(username="staf", password="x12345678")
         self.assertEqual(self.client.get(reverse("upload_perbaikan", args=[laporan.pk])).status_code, 200)
+
+    def test_buat_laporan_ketik_lokasi(self):
+        self.client.login(username="rani", password="x12345678")
+        # 1. Ketik lokasi baru
+        resp = self.client.post(reverse("buat"), {
+            "lokasi": "Ruang Rapat Dekanat, Gedung A",
+            "kategori": "listrik",
+            "judul": "Lampu kedip-kedip",
+            "deskripsi": "Lampu di ruang rapat berkedip terus",
+            "urgensi": 2,
+        })
+        self.assertEqual(resp.status_code, 302)
+        laporan_baru = Laporan.objects.get(judul="Lampu kedip-kedip")
+        self.assertEqual(laporan_baru.lokasi.nama, "Ruang Rapat Dekanat")
+        self.assertEqual(laporan_baru.lokasi.gedung, "Gedung A")
+
+        # 2. Ketik lokasi lama yang sudah ada
+        resp2 = self.client.post(reverse("buat"), {
+            "lokasi": "Ruang 2101",
+            "kategori": "air",
+            "judul": "Bocor di ruang 2101",
+            "deskripsi": "Ada rembesan air",
+            "urgensi": 1,
+        })
+        self.assertEqual(resp2.status_code, 302)
+        laporan_lama = Laporan.objects.get(judul="Bocor di ruang 2101")
+        self.assertEqual(laporan_lama.lokasi, self.lokasi)

@@ -50,7 +50,11 @@ def buat(request):
             services.catat_status(laporan, "dilaporkan", request.user)
             messages.success(request, "Laporan terkirim.")
             return redirect("detail", pk=laporan.pk)
-    return render(request, "lapor_form.html", {"form": form, "duplikat": duplikat})
+    return render(request, "lapor_form.html", {
+        "form": form,
+        "duplikat": duplikat,
+        "semua_lokasi": Lokasi.objects.all(),
+    })
 
 
 def detail(request, pk):
