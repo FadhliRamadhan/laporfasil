@@ -23,7 +23,7 @@ class Laporan(models.Model):
 
     pelapor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="laporan")
     lokasi = models.ForeignKey(Lokasi, on_delete=models.PROTECT)
-    kategori = models.CharField(max_length=20, choices=KATEGORI)
+    kategori = models.CharField("Kategori fasilitas", max_length=50)
     judul = models.CharField("Judul singkat", max_length=120)
     deskripsi = models.TextField()
     foto = models.ImageField("Foto kerusakan", upload_to="laporan/", blank=True)
@@ -42,6 +42,9 @@ class Laporan(models.Model):
 
     def __str__(self):
         return self.judul
+
+    def get_kategori_display(self):
+        return dict(self.KATEGORI).get(self.kategori, self.kategori.replace("-", " ").title())
 
 
 class RiwayatStatus(models.Model):

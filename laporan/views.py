@@ -54,6 +54,7 @@ def buat(request):
         "form": form,
         "duplikat": duplikat,
         "semua_lokasi": Lokasi.objects.all(),
+        "semua_kategori": Laporan.KATEGORI,
     })
 
 

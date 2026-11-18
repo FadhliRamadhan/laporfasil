@@ -89,3 +89,38 @@ class LaporanTests(TestCase):
         self.assertEqual(resp2.status_code, 302)
         laporan_lama = Laporan.objects.get(judul="Bocor di ruang 2101")
         self.assertEqual(laporan_lama.lokasi, self.lokasi)
+
+    def test_buat_laporan_ketik_kategori(self):
+        self.client.login(username="rani", password="x12345678")
+        # 1. Ketik teks label kategori (misal: "AC dan pendingin")
+        self.client.post(reverse("buat"), {
+            "lokasi": "Ruang 2101",
+            "kategori": "AC dan pendingin",
+            "judul": "Filter AC Kotor",
+            "deskripsi": "Filter perlu dibersihkan",
+            "urgensi": 1,
+        })
+        lap = Laporan.objects.get(judul="Filter AC Kotor")
+        self.assertEqual(lap.kategori, "ac")
+
+        # 2. Ketik sinonim / kata kunci umum (misal: "Toilet")
+        self.client.post(reverse("buat"), {
+            "lokasi": "Ruang 2101",
+            "kategori": "Toilet",
+            "judul": "Kloset Rusak",
+            "deskripsi": "Kloset mampet",
+            "urgensi": 2,
+        })
+        lap2 = Laporan.objects.get(judul="Kloset Rusak")
+        self.assertEqual(lap2.kategori, "air")
+
+        # 3. Ketik kategori baru (kustom)
+        self.client.post(reverse("buat"), {
+            "lokasi": "Ruang 2101",
+            "kategori": "Jaringan Internet",
+            "judul": "Wifi Lemah",
+            "deskripsi": "Koneksi sering putus",
+            "urgensi": 2,
+        })
+        lap3 = Laporan.objects.get(judul="Wifi Lemah")
+        self.assertEqual(lap3.kategori, "jaringan-internet")

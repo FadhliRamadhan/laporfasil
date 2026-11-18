@@ -47,6 +47,13 @@
       {% endfor %}
     </datalist>
 
+    <!-- DATALIST UNTUK AUTOCOMPLETE KETIK KATEGORI -->
+    <datalist id="daftar-kategori">
+      {% for code, label in semua_kategori %}
+      <option value="{{ label }}"></option>
+      {% endfor %}
+    </datalist>
+
     <div style="margin-top: 24px; display: flex; gap: 12px; align-items: center;">
       <button type="submit" class="btn" style="flex: 1;">Kirim Laporan</button>
       <a href="{% url 'beranda' %}" class="btn alt" style="border: 1px solid var(--ln);">Batal</a>

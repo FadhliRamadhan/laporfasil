@@ -14,6 +14,15 @@ class LaporanForm(forms.ModelForm):
         }),
         help_text="Ketik nama lokasi atau pilih dari saran yang muncul saat Anda mengetik."
     )
+    kategori = forms.CharField(
+        label="Kategori",
+        widget=forms.TextInput(attrs={
+            "placeholder": "Ketik kategori kerusakan (contoh: AC, Listrik, Air/Toilet, Aksesibilitas...)",
+            "list": "daftar-kategori",
+            "autocomplete": "off",
+        }),
+        help_text="Ketik kategori kerusakan atau pilih dari saran yang muncul saat Anda mengetik."
+    )
 
     class Meta:
         model = Laporan
@@ -26,7 +35,56 @@ class LaporanForm(forms.ModelForm):
             initial["lokasi"] = str(initial["lokasi"])
         elif kwargs.get("instance") and getattr(kwargs["instance"], "lokasi", None):
             initial["lokasi"] = str(kwargs["instance"].lokasi)
+
+        if "kategori" in initial:
+            dict_kat = dict(Laporan.KATEGORI)
+            initial["kategori"] = dict_kat.get(initial["kategori"], initial["kategori"])
+        elif kwargs.get("instance") and getattr(kwargs["instance"], "kategori", None):
+            kat_val = kwargs["instance"].kategori
+            dict_kat = dict(Laporan.KATEGORI)
+            initial["kategori"] = dict_kat.get(kat_val, kat_val)
+
         super().__init__(*args, **kwargs)
+
+    def clean_kategori(self):
+        val = self.cleaned_data.get("kategori", "").strip()
+        if not val:
+            raise forms.ValidationError("Kategori wajib diisi.")
+
+        val_lower = val.lower()
+
+        mapping = {
+            "ac": "ac",
+            "pendingin": "ac",
+            "ac dan pendingin": "ac",
+            "listrik": "listrik",
+            "lampu": "listrik",
+            "colokan": "listrik",
+            "stopkontak": "listrik",
+            "saklar": "listrik",
+            "air": "air",
+            "toilet": "air",
+            "air dan toilet": "air",
+            "wastafel": "air",
+            "keran": "air",
+            "kran": "air",
+            "aksesibilitas": "aksesibilitas",
+            "lift": "aksesibilitas",
+            "ramp": "aksesibilitas",
+            "disabilitas": "aksesibilitas",
+            "kursi roda": "aksesibilitas",
+            "lainnya": "lainnya",
+        }
+
+        if val_lower in mapping:
+            return mapping[val_lower]
+
+        for code, label in Laporan.KATEGORI:
+            if val_lower == code.lower() or val_lower == label.lower():
+                return code
+
+        slug = slugify(val)[:50]
+        return slug if slug else "lainnya"
 
     def clean_lokasi(self):
         val = self.cleaned_data.get("lokasi", "").strip()
