@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Buat laporan{% endblock %}
+{% block content %}
+<h1>Buat laporan</h1>
+<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
+{% if duplikat %}
+<div class="warn"><strong>Sudah ada laporan serupa di lokasi ini.</strong> Dukung laporan yang ada agar prioritasnya naik, atau kirim laporan baru.
+<ul>{% for d in duplikat %}<li><a href="{% url 'detail' d.pk %}">{{ d.judul }}</a> ({{ d.get_status_display }})</li>{% endfor %}</ul>
+<button name="tetap_kirim" value="1">Tetap kirim laporan baru</button></div>
+{% endif %}
+{{ form.as_p }}
+<button type="submit">Kirim laporan</button>
+</form>
+{% endblock %}

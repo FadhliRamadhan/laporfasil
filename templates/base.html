@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}LaporFasil{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--b:#2F5BEA;--bd:#1F46C7;--bg:#F7F8FA;--ink:#111827;--mu:#5B6472;--ln:#E5E7EB}
+*{box-sizing:border-box}
+body{margin:0;font:400 15px/1.5 Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:var(--bd)}
+header{background:#fff;border-bottom:1px solid var(--ln)}
+nav{max-width:1040px;margin:auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+nav div{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:500}
+nav .brand{font-size:18px;font-weight:600;color:var(--b)}
+main{max-width:1040px;margin:auto;padding:20px}
+h1{font-size:24px;margin:8px 0 16px}h2{font-size:18px;margin:24px 0 12px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:16px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+.hero{background:var(--b);color:#fff;border-radius:20px;padding:24px}
+.hero h1{margin:0 0 4px;font-size:26px}.hero p{margin:0 0 16px;color:#E8EEFD}
+.btn,button{display:inline-block;min-height:42px;padding:0 18px;border:0;border-radius:10px;background:var(--b);color:#fff;font:600 14px Inter,sans-serif;text-decoration:none;cursor:pointer;line-height:42px}
+a.btn.alt{background:#fff;color:var(--bd);border:1px solid var(--ln)}
+a.btn.sm,button.sm{min-height:34px;line-height:34px;padding:0 12px;font-size:13px;border-radius:8px}
+.btn-success{background:#059669!important;color:#fff!important}
+.btn-warning{background:#D97706!important;color:#fff!important}
+button.link{background:none;color:var(--bd);padding:0;min-height:0;line-height:1.5;font-weight:500}
+.inline{display:inline}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.num{font-size:26px;font-weight:600;margin:0}.mu{color:var(--mu);font-size:13px;margin:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.chip{padding:7px 14px;border-radius:999px;background:#fff;border:1px solid #D1D5DB;text-decoration:none;color:var(--ink);font-size:13px;font-weight:500}
+.chip.on{background:var(--b);border-color:var(--b);color:#fff}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}
+.row:last-child{border:0}.row a.t{font-weight:600;text-decoration:none;color:var(--ink)}
+.pill{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;display:inline-block}
+.s-dilaporkan{background:#F1F3F5;color:#495057}
+.s-diverifikasi{background:#E0F2FE;color:#0369A1}
+.s-dikerjakan{background:#FEF3C7;color:#92400E}
+.s-selesai{background:#DCFCE7;color:#166534}
+.skor{background:#FEE2E2;color:#991B1B}
+.badge{padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.urgensi-1{background:#EFF6FF;color:#1D4ED8}
+.urgensi-2{background:#FEF3C7;color:#B45309}
+.urgensi-3{background:#FEE2E2;color:#B91C1C}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #D1D5DB;border-radius:12px;font:inherit;background:#fff}
+form p{margin:0 0 14px}form label{display:block;font-weight:500;font-size:14px;margin-bottom:4px}
+.msg{background:#E3F6EE;color:#0B6B47;padding:10px 14px;border-radius:12px}
+.warn{background:#FFF3DB;color:#6B4400;border-radius:12px;padding:14px;margin-bottom:16px}
+.bar{flex:1;height:10px;background:var(--ln);border-radius:5px}.bar i{display:block;height:10px;background:var(--b);border-radius:5px}
+img.foto{max-width:100%;border-radius:12px;margin-bottom:12px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #9DB4F7;outline-offset:2px}
+</style>
+</head>
+<body>
+<header><nav>
+<a class="brand" href="{% url 'beranda' %}">LaporFasil</a>
+<div>
+{% if user.is_authenticated %}
+{% if user.is_staff %}<a href="{% url 'dashboard' %}">Dashboard</a><a href="{% url 'qr_daftar' %}">Kode QR</a>{% endif %}
+<a href="{% url 'buat' %}">Buat laporan</a>
+<form method="post" action="{% url 'logout' %}" class="inline">{% csrf_token %}<button class="link">Keluar ({{ user.username }})</button></form>
+{% else %}
+<a href="{% url 'login' %}">Masuk</a><a class="btn sm" href="{% url 'daftar' %}">Daftar</a>
+{% endif %}
+</div>
+</nav></header>
+<main>
+{% for m in messages %}<p class="msg">{{ m }}</p>{% endfor %}
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

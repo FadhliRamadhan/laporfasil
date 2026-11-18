@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero"><h1>Ada fasilitas rusak?</h1><p>Laporkan dalam hitungan detik dan pantau perbaikannya.</p><a class="btn alt" href="{% url 'buat' %}">Buat laporan</a></section>
+<div class="grid">
+<div class="card"><p class="mu">Laporan aktif</p><p class="num">{{ aktif }}</p></div>
+<div class="card"><p class="mu">Selesai bulan ini</p><p class="num">{{ selesai_bulan }}</p></div>
+</div>
+<div class="chips">
+<a class="chip {% if not kategori %}on{% endif %}" href="{% url 'beranda' %}">Semua</a>
+{% for kode, nama in kategori_list %}<a class="chip {% if kode == kategori %}on{% endif %}" href="?kategori={{ kode }}">{{ nama }}</a>{% endfor %}
+</div>
+<div class="card">
+{% for l in terbaru %}
+<div class="row"><div><a class="t" href="{% url 'detail' l.pk %}">{{ l.judul }}</a><p class="mu">{{ l.lokasi }} · {{ l.pendukung.count }} pendukung</p></div>
+<div><span class="pill skor">Skor {{ l.skor }}</span> <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span></div></div>
+{% empty %}<p class="mu">Belum ada laporan di kategori ini.</p>{% endfor %}
+</div>
+{% endblock %}

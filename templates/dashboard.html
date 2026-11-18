@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Manajemen Staf - LaporFasil{% endblock %}
+
+{% block content %}
+<!-- HEADER DASHBOARD -->
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:20px;">
+  <div>
+    <h1 style="margin:0 0 6px;">Dashboard Manajemen Staf</h1>
+    <p class="mu" style="margin:0;">Kelola laporan fasilitas, pantau status pengerjaan, dan unggah bukti hasil perbaikan.</p>
+  </div>
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <a href="{% url 'qr_daftar' %}" class="btn sm alt" style="display:inline-flex; align-items:center; gap:6px;">
+      <span>📱</span> Kode QR Ruangan
+    </a>
+    <a href="{% url 'buat' %}" class="btn sm" style="display:inline-flex; align-items:center; gap:6px;">
+      <span>➕</span> Buat Laporan Baru
+    </a>
+  </div>
+</div>
+
+<!-- STATISTIK KARTU UTAMA -->
+<div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:24px;">
+  <div class="card" style="border-left:4px solid #2F5BEA;">
+    <p class="mu" style="font-size:12px; font-weight:600; text-transform:uppercase;">Total Laporan</p>
+    <p class="num" style="color:#2F5BEA;">{{ total_n }}</p>
+    <small class="mu">{{ aktif_n }} aktif saat ini</small>
+  </div>
+  <div class="card" style="border-left:4px solid #6B7280;">
+    <p class="mu" style="font-size:12px; font-weight:600; text-transform:uppercase;">Perlu Penanganan</p>
+    <p class="num" style="color:#4B5563;">{{ dilaporkan_n }}</p>
+    <small class="mu">Status Dilaporkan</small>
+  </div>
+  <div class="card" style="border-left:4px solid #D97706;">
+    <p class="mu" style="font-size:12px; font-weight:600; text-transform:uppercase;">Sedang Dikerjakan</p>
+    <p class="num" style="color:#D97706;">{{ dikerjakan_n }}</p>
+    <small class="mu">Dalam proses teknisi</small>
+  </div>
+  <div class="card" style="border-left:4px solid #059669;">
+    <p class="mu" style="font-size:12px; font-weight:600; text-transform:uppercase;">Selesai Diperbaiki</p>
+    <p class="num" style="color:#059669;">{{ selesai_n }}</p>
+    <small class="mu">Fasilitas normal</small>
+  </div>
+  <div class="card" style="border-left:4px solid #DC2626;">
+    <p class="mu" style="font-size:12px; font-weight:600; text-transform:uppercase;">Prioritas Mendesak</p>
+    <p class="num" style="color:#DC2626;">{{ mendesak_n }}</p>
+    <small class="mu">Skor prioritas &ge; 80</small>
+  </div>
+  <div class="card" style="border-left:4px solid #7C3AED;">
+    <p class="mu" style="font-size:12px; font-weight:600; text-transform:uppercase;">Rata-rata Waktu</p>
+    <p class="num" style="color:#7C3AED;">{{ rata }} <span style="font-size:15px; font-weight:500;">hari</span></p>
+    <small class="mu">Durasi perbaikan</small>
+  </div>
+</div>
+
+<!-- FILTER & PENCARIAN -->
+<div class="card" style="margin-bottom:24px; padding:18px;">
+  <form method="get" action="{% url 'dashboard' %}" style="margin:0;">
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
+      <div style="flex:2; min-width:220px;">
+        <input type="text" name="q" value="{{ q }}" placeholder="🔍 Cari judul, fasilitas, ruangan, atau gedung..." style="height:42px;">
+      </div>
+      <div style="flex:1; min-width:140px;">
+        <select name="status" style="height:42px;">
+          <option value="">Semua Status</option>
+          {% for code, label in status_list %}
+          <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="flex:1; min-width:140px;">
+        <select name="kategori" style="height:42px;">
+          <option value="">Semua Kategori</option>
+          {% for code, label in kategori_list %}
+          <option value="{{ code }}" {% if kategori_filter == code %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="flex:1; min-width:130px;">
+        <select name="urgensi" style="height:42px;">
+          <option value="">Semua Urgensi</option>
+          {% for code, label in urgensi_list %}
+          <option value="{{ code }}" {% if urgensi_filter == code|stringformat:"i" %}selected{% endif %}>Urgensi {{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button type="submit" class="btn sm" style="height:42px; line-height:42px; padding:0 16px;">Terapkan Filter</button>
+        {% if q or status_filter or kategori_filter or urgensi_filter %}
+        <a href="{% url 'dashboard' %}" class="btn sm alt" style="height:42px; line-height:40px; padding:0 14px;">Reset</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Status Tabs -->
+    <div class="chips" style="margin:0;">
+      <a class="chip {% if not status_filter %}on{% endif %}" href="{% url 'dashboard' %}{% if q %}?q={{ q }}{% endif %}">Semua ({{ total_n }})</a>
+      <a class="chip {% if status_filter == 'dilaporkan' %}on{% endif %}" href="?status=dilaporkan{% if q %}&q={{ q }}{% endif %}">📥 Dilaporkan ({{ dilaporkan_n }})</a>
+      <a class="chip {% if status_filter == 'diverifikasi' %}on{% endif %}" href="?status=diverifikasi{% if q %}&q={{ q }}{% endif %}">🔍 Diverifikasi ({{ diverifikasi_n }})</a>
+      <a class="chip {% if status_filter == 'dikerjakan' %}on{% endif %}" href="?status=dikerjakan{% if q %}&q={{ q }}{% endif %}">🔧 Dikerjakan ({{ dikerjakan_n }})</a>
+      <a class="chip {% if status_filter == 'selesai' %}on{% endif %}" href="?status=selesai{% if q %}&q={{ q }}{% endif %}">✅ Selesai ({{ selesai_n }})</a>
+    </div>
+  </form>
+</div>
+
+<!-- DAFTAR LAPORAN UNTUK STAF -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+  <h2 style="margin:0;">Daftar Laporan Fasilitas ({{ laporan_list|length }})</h2>
+  <span class="mu" style="font-size:13px;">Diurutkan otomatis: Prioritas perbaikan tertinggi di atas</span>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:16px; margin-bottom:32px;">
+  {% for l in laporan_list %}
+  <div class="card" style="padding:18px; border-left: 5px solid {% if l.status == 'selesai' %}#059669{% elif l.status == 'dikerjakan' %}#D97706{% elif l.status == 'diverifikasi' %}#2F5BEA{% else %}#9CA3AF{% endif %};">
+    
+    <!-- Header Kartu -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+      <div>
+        <span class="pill skor" style="font-size:11px; margin-right:4px;">Skor Prioritas: {{ l.skor }}</span>
+        <span class="badge urgensi-{{ l.urgensi }}" style="margin-right:4px;">Urgensi {{ l.get_urgensi_display }}</span>
+        <span class="badge" style="background:#F3F4F6; color:#374151; margin-right:4px;">{{ l.get_kategori_display }}</span>
+        <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span>
+      </div>
+      <div class="mu" style="font-size:13px;">
+        ID #{{ l.pk }} &nbsp;•&nbsp; 👥 {{ l.pendukung.count }} warga mendukung
+      </div>
+    </div>
+
+    <!-- Konten Utama Laporan -->
+    <div style="display:flex; gap:18px; flex-wrap:wrap; align-items:flex-start; margin-bottom:14px;">
+      
+      <!-- Thumbnail Foto Kerusakan & Hasil Perbaikan -->
+      <div style="display:flex; gap:10px; flex-shrink:0;">
+        {% if l.foto %}
+        <div style="text-align:center;">
+          <img src="{{ l.foto.url }}" alt="Kerusakan" style="width:90px; height:80px; object-fit:cover; border-radius:8px; border:1px solid var(--ln); display:block;">
+          <span style="font-size:10px; color:var(--mu); font-weight:600;">Sebelum</span>
+        </div>
+        {% else %}
+        <div style="width:90px; height:80px; border-radius:8px; background:#F3F4F6; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-size:11px; text-align:center; padding:4px;">
+          Tanpa Foto
+        </div>
+        {% endif %}
+
+        {% if l.foto_perbaikan %}
+        <div style="text-align:center;">
+          <img src="{{ l.foto_perbaikan.url }}" alt="Hasil Perbaikan" style="width:90px; height:80px; object-fit:cover; border-radius:8px; border:2px solid #059669; display:block;">
+          <span style="font-size:10px; color:#059669; font-weight:700;">✓ Hasil Perbaikan</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Detail Info -->
+      <div style="flex:1; min-width:260px;">
+        <h3 style="margin:0 0 6px; font-size:18px;">
+          <a href="{% url 'detail' l.pk %}" style="text-decoration:none; color:var(--ink);">{{ l.judul }}</a>
+        </h3>
+        <p class="mu" style="margin:0 0 8px; font-size:13px;">
+          📍 <strong>{{ l.lokasi.nama }}</strong> ({{ l.lokasi.gedung }}) &nbsp;•&nbsp; 
+          👤 Pelapor: {{ l.pelapor.username }} &nbsp;•&nbsp; 
+          🕒 {{ l.dibuat|date:"d M Y, H:i" }}
+        </p>
+        <p style="margin:0; font-size:14px; color:#374151; line-height:1.4;">
+          {{ l.deskripsi|truncatechars:180 }}
+        </p>
+
+        <!-- Informasi Hasil Perbaikan Jika Ada -->
+        {% if l.catatan_perbaikan or l.foto_perbaikan %}
+        <div style="margin-top:10px; padding:10px 12px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <strong style="color:#166534; font-size:12px;">🛠️ Catatan Tindakan Petugas:</strong>
+            {% if l.petugas %}<span style="font-size:11px; color:#15803D;">Oleh: {{ l.petugas.username }}</span>{% endif %}
+          </div>
+          <p style="margin:0; font-size:13px; color:#14532D;">
+            {{ l.catatan_perbaikan|default:"Fasilitas telah diperiksa dan diperbaiki." }}
+          </p>
+          {% if l.selesai_pada %}
+          <small style="color:#166534; display:block; margin-top:4px;">Diselesaikan pada: {{ l.selesai_pada|date:"d M Y H:i" }}</small>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Action Bar Staf -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:12px; border-top:1px solid var(--ln);">
+      
+      <!-- Quick Status Form -->
+      <form method="post" action="{% url 'ubah_status' l.pk %}" style="display:flex; align-items:center; gap:8px; margin:0;" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <label for="status-{{ l.pk }}" style="font-size:13px; font-weight:600; margin:0;">Status:</label>
+        <select id="status-{{ l.pk }}" name="status" style="width:auto; padding:6px 10px; font-size:13px; border-radius:8px; height:34px;">
+          {% for code, label in status_list %}
+          <option value="{{ code }}" {% if code == l.status %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn sm alt" style="height:34px; line-height:32px; padding:0 12px;">Update</button>
+      </form>
+
+      <!-- Tombol Aksi Upload Hasil Perbaikan & Detail -->
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button type="button" onclick="openModal('{{ l.pk }}', '{{ l.judul|escapejs }}', '{{ l.lokasi|escapejs }}', '{{ l.status }}', '{{ l.catatan_perbaikan|escapejs }}')" class="btn sm btn-success" style="display:inline-flex; align-items:center; gap:6px;">
+          <span>📸</span> Upload Hasil Perbaikan
+        </button>
+        <a href="{% url 'upload_perbaikan' l.pk %}" class="btn sm alt" title="Form halaman penuh">
+          Halaman Upload
+        </a>
+        <a href="{% url 'detail' l.pk %}" class="btn sm alt">
+          Detail & Riwayat →
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+  {% empty %}
+  <div class="card" style="text-align:center; padding:36px 20px;">
+    <p style="font-size:32px; margin:0 0 10px;">📋</p>
+    <h3 style="margin:0 0 6px;">Tidak ada laporan yang sesuai kriteria</h3>
+    <p class="mu" style="margin:0 0 16px;">Silakan sesuaikan filter status, kategori, atau kata kunci pencarian Anda.</p>
+    <a href="{% url 'dashboard' %}" class="btn sm">Tampilkan Semua Laporan</a>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- SECTION DUA KOLOM: STATISTIK LOKASI & GALERI SELESAI -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-bottom:24px;">
+  
+  <!-- Lokasi dengan Laporan Terbanyak -->
+  <div class="card">
+    <h2 style="margin:0 0 14px; font-size:17px;">📍 Lokasi dengan Laporan Aktif Terbanyak</h2>
+    {% for x in per_lokasi %}
+    <div class="row">
+      <span style="width:160px; font-weight:500;">{{ x.nama }}</span>
+      <span class="bar"><i style="width:{{ x.persen }}%"></i></span>
+      <strong style="margin-left:10px;">{{ x.n }}</strong>
+    </div>
+    {% empty %}
+    <p class="mu">Belum ada laporan aktif saat ini.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Galeri Hasil Perbaikan Selesai -->
+  <div class="card">
+    <h2 style="margin:0 0 14px; font-size:17px;">✨ Dokumentasi Perbaikan Terkini</h2>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      {% for g in galeri_selesai %}
+      <div style="display:flex; gap:12px; align-items:center; padding-bottom:10px; border-bottom:1px solid var(--ln);">
+        {% if g.foto_perbaikan %}
+        <img src="{{ g.foto_perbaikan.url }}" alt="{{ g.judul }}" style="width:64px; height:54px; object-fit:cover; border-radius:8px; border:1px solid #059669; flex-shrink:0;">
+        {% elif g.foto %}
+        <img src="{{ g.foto.url }}" alt="{{ g.judul }}" style="width:64px; height:54px; object-fit:cover; border-radius:8px; border:1px solid var(--ln); flex-shrink:0;">
+        {% else %}
+        <div style="width:64px; height:54px; border-radius:8px; background:#E5E7EB; display:flex; align-items:center; justify-content:center; font-size:10px; color:#6B7280; flex-shrink:0;">
+          No Photo
+        </div>
+        {% endif %}
+        <div style="flex:1; min-width:0;">
+          <a href="{% url 'detail' g.pk %}" style="font-weight:600; text-decoration:none; color:var(--ink); font-size:14px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            {{ g.judul }}
+          </a>
+          <p class="mu" style="margin:2px 0 0; font-size:12px;">
+            {{ g.lokasi.nama }} &nbsp;•&nbsp; <span style="color:#059669; font-weight:600;">Selesai</span>
+            {% if g.petugas %} oleh {{ g.petugas.username }}{% endif %}
+          </p>
+        </div>
+      </div>
+      {% empty %}
+      <p class="mu">Belum ada dokumentasi perbaikan yang diunggah.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL QUICK UPLOAD HASIL PERBAIKAN -->
+<div id="modalPerbaikan" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; padding:16px;">
+  <div class="card" style="width:100%; max-width:540px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 25px -5px rgba(0,0,0,0.2); position:relative;">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--ln); padding-bottom:12px; margin-bottom:16px;">
+      <h2 style="margin:0; font-size:18px;">📸 Upload Bukti Hasil Perbaikan</h2>
+      <button type="button" onclick="closeModal()" style="background:none; border:0; font-size:22px; color:var(--mu); cursor:pointer; line-height:1; min-height:0; padding:4px;">&times;</button>
+    </div>
+
+    <form id="formPerbaikanModal" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+      <div style="margin-bottom:14px; padding:10px 12px; background:var(--bg); border-radius:10px;">
+        <strong id="modalLaporanJudul" style="display:block; font-size:15px; color:var(--ink); margin-bottom:2px;">Judul Laporan</strong>
+        <span id="modalLaporanLokasi" class="mu" style="font-size:13px;">Lokasi</span>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label for="modalStatus" style="display:block; font-weight:600; margin-bottom:6px; font-size:13px;">Status Fasilitas:</label>
+        <select id="modalStatus" name="status" style="width:100%; padding:9px 12px; border:1px solid #D1D5DB; border-radius:10px; font:inherit; background:#fff;">
+          <option value="selesai">✅ Selesai (Perbaikan tuntas & fasilitas kembali normal)</option>
+          <option value="dikerjakan">🔧 Dikerjakan (Sedang dalam proses penanganan)</option>
+          <option value="diverifikasi">🔍 Diverifikasi (Sudah dicek & dijadwalkan)</option>
+          <option value="dilaporkan">📥 Dilaporkan (Belum ditindaklanjuti)</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label for="modalFoto" style="display:block; font-weight:600; margin-bottom:6px; font-size:13px;">Unggah Foto Hasil Perbaikan (Setelah):</label>
+        <input type="file" id="modalFoto" name="foto_perbaikan" accept="image/*" style="width:100%; padding:9px 12px; border:1px dashed #2F5BEA; border-radius:10px; background:#F8FAFF;">
+        <small class="mu" style="font-size:11px;">Upload foto fasilitas yang telah berhasil diperbaiki.</small>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label for="modalCatatan" style="display:block; font-weight:600; margin-bottom:6px; font-size:13px;">Catatan Penanganan / Tindakan Petugas:</label>
+        <textarea id="modalCatatan" name="catatan_perbaikan" rows="3" style="width:100%; padding:9px 12px; border:1px solid #D1D5DB; border-radius:10px; font:inherit;" placeholder="Tuliskan tindakan perbaikan yang telah dilakukan, komponen yang diganti, dsb..."></textarea>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" onclick="closeModal()" class="btn alt sm">Batal</button>
+        <button type="submit" class="btn btn-success sm">Simpan & Upload Bukti</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script>
+function openModal(id, judul, lokasi, status, catatan) {
+  var modal = document.getElementById('modalPerbaikan');
+  var form = document.getElementById('formPerbaikanModal');
+  var judulEl = document.getElementById('modalLaporanJudul');
+  var lokasiEl = document.getElementById('modalLaporanLokasi');
+  var statusEl = document.getElementById('modalStatus');
+  var catatanEl = document.getElementById('modalCatatan');
+
+  form.action = '/laporan/' + id + '/status/';
+  judulEl.textContent = judul;
+  lokasiEl.textContent = '📍 ' + lokasi;
+  statusEl.value = (status === 'selesai' || status === 'dikerjakan') ? status : 'selesai';
+  catatanEl.value = catatan || '';
+
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('modalPerbaikan').style.display = 'none';
+}
+
+window.addEventListener('click', function(e) {
+  var modal = document.getElementById('modalPerbaikan');
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+</script>
+{% endblock %}

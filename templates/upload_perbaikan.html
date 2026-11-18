@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Upload Hasil Perbaikan - {{ laporan.judul }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 16px;">
+  <a href="{% url 'dashboard' %}" class="btn sm alt" style="border: 1px solid var(--ln);">← Kembali ke Dashboard Staf</a>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+    <div>
+      <span class="pill skor" style="margin-bottom: 8px; display:inline-block;">Skor Prioritas: {{ laporan.skor }}</span>
+      <span class="pill s-{{ laporan.status }}" style="margin-bottom: 8px; display:inline-block;">Status Saat Ini: {{ laporan.get_status_display }}</span>
+      <h1 style="margin: 4px 0 8px;">{{ laporan.judul }}</h1>
+      <p class="mu" style="margin: 0;">
+        📍 <strong>{{ laporan.lokasi.nama }}</strong> ({{ laporan.lokasi.gedung }}) &nbsp;•&nbsp; 
+        🏷️ {{ laporan.get_kategori_display }} &nbsp;•&nbsp; 
+        ⚠️ Urgensi {{ laporan.get_urgensi_display }} &nbsp;•&nbsp; 
+        👤 Pelapor: {{ laporan.pelapor.username }} ({{ laporan.dibuat|date:"j M Y H:i" }})
+      </p>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; padding: 14px; background: var(--bg); border-radius: 12px;">
+    <strong>Deskripsi Kerusakan:</strong>
+    <p style="margin: 6px 0 0;">{{ laporan.deskripsi }}</p>
+  </div>
+
+  {% if laporan.foto %}
+  <div style="margin-top: 16px;">
+    <strong style="display:block; margin-bottom:8px;">Foto Kondisi Kerusakan (Sebelum):</strong>
+    <img src="{{ laporan.foto.url }}" alt="Foto Kerusakan" style="max-height: 280px; border-radius: 12px; border: 1px solid var(--ln); object-fit: cover;">
+  </div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0; border-bottom: 1px solid var(--ln); padding-bottom: 12px;">Formulir Hasil Perbaikan Fasilitas</h2>
+  <p class="mu" style="margin-bottom: 20px;">
+    Unggah bukti pengerjaan teknis atau foto fasilitas yang telah normal kembali. Data ini dapat dilihat oleh pelapor dan sivitas akademika untuk transparansi perbaikan.
+  </p>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 18px;">
+      <label for="id_status" style="display:block; font-weight:600; margin-bottom:6px;">Update Status Fasilitas:</label>
+      <select name="status" id="id_status" style="width:100%; padding:10px 12px; border:1px solid #D1D5DB; border-radius:12px; font:inherit; background:#fff;">
+        <option value="dikerjakan" {% if form.status.value == "dikerjakan" %}selected{% endif %}>🔧 Dikerjakan (Sedang dalam proses perbaikan teknis)</option>
+        <option value="selesai" {% if form.status.value == "selesai" %}selected{% endif %}>✅ Selesai (Perbaikan rampung & fasilitas kembali berfungsi normal)</option>
+        <option value="diverifikasi" {% if form.status.value == "diverifikasi" %}selected{% endif %}>🔍 Diverifikasi (Telah dicek petugas & dijadwalkan)</option>
+        <option value="dilaporkan" {% if form.status.value == "dilaporkan" %}selected{% endif %}>📥 Dilaporkan (Masih menunggu antrean)</option>
+      </select>
+    </div>
+
+    {% if laporan.foto_perbaikan %}
+    <div style="margin-bottom: 18px; padding:12px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px;">
+      <p style="color:#166534; font-weight:600; margin:0 0 8px;">Foto Bukti Perbaikan Saat Ini:</p>
+      <img src="{{ laporan.foto_perbaikan.url }}" alt="Bukti Perbaikan" style="max-height: 200px; border-radius: 8px; border: 1px solid #86EFAC;">
+      <p class="mu" style="margin: 6px 0 0; font-size:12px;">Unggah berkas baru di bawah jika ingin mengganti foto bukti perbaikan.</p>
+    </div>
+    {% endif %}
+
+    <div style="margin-bottom: 18px;">
+      <label for="id_foto_perbaikan" style="display:block; font-weight:600; margin-bottom:6px;">Unggah Foto Hasil Perbaikan (Setelah):</label>
+      <input type="file" name="foto_perbaikan" id="id_foto_perbaikan" accept="image/*" style="width:100%; padding:10px 12px; border:1px dashed #2F5BEA; border-radius:12px; background:#F8FAFF;">
+      <small class="mu">Format foto didukung: JPG, PNG, WEBP. Maksimal ukuran 10MB.</small>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <label for="id_catatan_perbaikan" style="display:block; font-weight:600; margin-bottom:6px;">Catatan / Keterangan Penanganan Petugas:</label>
+      <textarea name="catatan_perbaikan" id="id_catatan_perbaikan" rows="4" style="width:100%; padding:10px 12px; border:1px solid #D1D5DB; border-radius:12px; font:inherit;" placeholder="Tuliskan tindakan yang dilakukan, suku cadang yang diganti, atau instruksi penggunaan fasilitas setelah diperbaiki...">{{ form.catatan_perbaikan.value|default:'' }}</textarea>
+    </div>
+
+    <div style="display:flex; gap:12px; align-items:center;">
+      <button type="submit" class="btn" style="background:#059669;">💾 Simpan & Upload Hasil Perbaikan</button>
+      <a href="{% url 'dashboard' %}" class="btn alt" style="border:1px solid var(--ln);">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

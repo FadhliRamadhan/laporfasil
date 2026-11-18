@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}{{ l.judul }} - LaporFasil{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 14px;">
+  <a href="{% if user.is_staff %}{% url 'dashboard' %}{% else %}{% url 'beranda' %}{% endif %}" class="btn sm alt" style="border: 1px solid var(--ln);">
+    ← Kembali ke {% if user.is_staff %}Dashboard Staf{% else %}Beranda{% endif %}
+  </a>
+</div>
+
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
+    <div>
+      <h1 style="margin:0 0 6px;">{{ l.judul }}</h1>
+      <p class="mu" style="margin:0 0 10px;">
+        📍 <strong>{{ l.lokasi }}</strong> &nbsp;•&nbsp; 
+        🏷️ {{ l.get_kategori_display }} &nbsp;•&nbsp; 
+        ⚠️ Urgensi {{ l.get_urgensi_display }} &nbsp;•&nbsp; 
+        👤 Dilaporkan oleh {{ l.pelapor.username }} ({{ l.dibuat|date:"j M Y H:i" }})
+      </p>
+    </div>
+    <div>
+      <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span>
+      <span class="pill skor">Skor Prioritas {{ l.skor }}</span>
+    </div>
+  </div>
+
+  <div style="margin: 14px 0; padding: 14px; background: var(--bg); border-radius: 12px;">
+    <strong>Keterangan Keluhan:</strong>
+    <p style="margin: 6px 0 0;">{{ l.deskripsi }}</p>
+  </div>
+
+  {% if l.foto %}
+  <div style="margin: 16px 0;">
+    <strong style="display:block; margin-bottom:8px;">📸 Foto Kerusakan Awal:</strong>
+    <img class="foto" src="{{ l.foto.url }}" alt="Foto kerusakan: {{ l.judul }}" style="max-height:360px; object-fit:cover; border:1px solid var(--ln);">
+  </div>
+  {% endif %}
+
+  <!-- SECTION HASIL PERBAIKAN -->
+  {% if l.foto_perbaikan or l.catatan_perbaikan %}
+  <div style="margin: 20px 0; padding: 16px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3 style="margin:0; color:#166534; font-size:16px;">✅ Hasil Tindakan & Dokumentasi Perbaikan</h3>
+      {% if l.petugas %}<span style="font-size:12px; color:#15803D; font-weight:600;">Petugas: {{ l.petugas.username }}</span>{% endif %}
+    </div>
+
+    {% if l.catatan_perbaikan %}
+    <p style="margin:0 0 12px; color:#14532D; font-size:14px;">
+      <strong>Catatan Petugas:</strong> {{ l.catatan_perbaikan }}
+    </p>
+    {% endif %}
+
+    {% if l.foto_perbaikan %}
+    <div>
+      <strong style="display:block; color:#166534; margin-bottom:8px; font-size:13px;">Foto Hasil Perbaikan (Setelah):</strong>
+      <img src="{{ l.foto_perbaikan.url }}" alt="Hasil Perbaikan: {{ l.judul }}" style="max-height:320px; border-radius:10px; border:2px solid #059669;">
+    </div>
+    {% endif %}
+
+    {% if l.selesai_pada %}
+    <small style="display:block; margin-top:8px; color:#166534;">Selesai diperbaiki pada: {{ l.selesai_pada|date:"d M Y, H:i" }}</small>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- DUKUNGAN -->
+  <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--ln);">
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'dukung' l.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn sm {% if mendukung %}alt{% endif %}">
+        {% if mendukung %}✓ Batal dukung{% else %}👍 Saya juga mengalami ini{% endif %} · {{ l.pendukung.count }} warga
+      </button>
+    </form>
+    {% else %}
+    <p class="mu" style="margin:0;">
+      {{ l.pendukung.count }} orang mengalami hal yang sama. <a href="{% url 'login' %}">Masuk</a> untuk mendukung.
+    </p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- FORM KHUSUS STAF UNTUK UBAH STATUS & UPLOAD HASIL PERBAIKAN -->
+{% if user.is_staff %}
+<div class="card" style="margin-top:20px; border-top:4px solid #059669;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+    <h2 style="margin:0; font-size:18px;">🛠️ Kelola & Upload Hasil Perbaikan (Akses Staf)</h2>
+    <a href="{% url 'upload_perbaikan' l.pk %}" class="btn sm alt">Halaman Khusus Upload ↗</a>
+  </div>
+  
+  <form method="post" action="{% url 'ubah_status' l.pk %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+      <label for="s" style="font-weight:600;">Status Penanganan Fasilitas:</label>
+      <select id="s" name="status" style="max-width:320px;">
+        {% for kode, nama in status_list %}
+        <option value="{{ kode }}" {% if kode == l.status %}selected{% endif %}>{{ nama }}</option>
+        {% endfor %}
+      </select>
+    </p>
+
+    <p>
+      <label for="foto_p" style="font-weight:600;">Unggah Foto Bukti Hasil Perbaikan:</label>
+      <input type="file" id="foto_p" name="foto_perbaikan" accept="image/*" style="max-width:400px; padding:8px 10px; background:#F8FAFF; border:1px dashed #2F5BEA;">
+      <small class="mu" style="display:block; margin-top:4px;">Pilih foto bukti setelah fasilitas diperbaiki.</small>
+    </p>
+
+    <p>
+      <label for="catatan_p" style="font-weight:600;">Catatan / Keterangan Penanganan:</label>
+      <textarea id="catatan_p" name="catatan_perbaikan" rows="3" placeholder="Tuliskan tindakan yang dilakukan, suku cadang yang diganti, dsb...">{{ l.catatan_perbaikan }}</textarea>
+    </p>
+
+    <button type="submit" class="btn btn-success">💾 Simpan Status & Hasil Perbaikan</button>
+  </form>
+</div>
+{% endif %}
+
+<!-- RIWAYAT STATUS -->
+<h2>Riwayat Status & Penanganan</h2>
+<div class="card">
+  {% for r in riwayat %}
+  <div class="row">
+    <div>
+      <span class="pill s-{{ r.status }}">{{ r.get_status_display }}</span>
+      {% if r.catatan %}<span style="font-size:13px; margin-left:8px; color:#374151;">— {{ r.catatan }}</span>{% endif %}
+    </div>
+    <span class="mu" style="font-size:12px;">
+      {{ r.waktu|date:"j M Y H:i" }}{% if r.oleh %} oleh <strong>{{ r.oleh.username }}</strong>{% endif %}
+    </span>
+  </div>
+  {% empty %}
+  <p class="mu">Belum ada riwayat tercatat.</p>
+  {% endfor %}
+</div>
+{% endblock %}

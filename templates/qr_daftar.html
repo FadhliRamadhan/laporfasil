@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Kode QR ruangan{% endblock %}
+{% block content %}
+<h1>Kode QR ruangan</h1>
+<p class="mu">Cetak dan tempel di ruangan. Scan membuka form laporan dengan lokasi sudah terisi.</p>
+<div class="grid">{% for x in lokasi %}
+<div class="card"><img src="{% url 'qr' x.kode %}" alt="Kode QR {{ x }}" width="160" height="160"><p>{{ x }}</p></div>
+{% endfor %}</div>
+{% endblock %}
