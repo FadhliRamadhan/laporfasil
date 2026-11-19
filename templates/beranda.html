@@ -1,85 +1,299 @@
 {% extends "base.html" %}
+{% block title %}Dashboard Aspirasi & Fasilitas Kampus - LaporFasil{% endblock %}
+
 {% block content %}
-<section class="hero" style="background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);">
-  <h1>Ada fasilitas rusak, tempat kotor, atau kendala kampus?</h1>
-  <p>Laporkan kerusakan fisik, kebersihan lingkungan, keamanan, atau sarana belajar dalam hitungan detik. Pantau penanganannya secara transparan.</p>
-  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
-    <a class="btn alt" href="{% url 'buat' %}" style="font-weight:700;">➕ Buat Laporan Sekarang</a>
-    {% if user.is_staff %}
-    <a class="btn sm" href="{% url 'dashboard' %}" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); line-height:42px;">📊 Buka Dashboard Staf</a>
+<!-- WELCOME BANNER / USER OVERVIEW -->
+<div class="hero">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+    <div>
+      {% if user.is_authenticated %}
+      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.18); padding:4px 12px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:10px;">
+        👋 Selamat Datang, {{ user.first_name|default:user.username }}
+      </div>
+      <h1>Dashboard Aspirasi & Fasilitas Kampus</h1>
+      <p>Pantau status perbaikan fasilitas yang kamu laporkan, dukung keluhan mahasiswa lain, atau ajukan laporan fasilitas baru.</p>
+      {% else %}
+      <h1>Ada Fasilitas Rusak atau Tempat Kotor di Kampus?</h1>
+      <p>Laporkan kerusakan fisik, kebersihan lingkungan, keamanan, atau sarana belajar dalam hitungan detik. Pantau penanganannya secara transparan.</p>
+      {% endif %}
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <a href="{% url 'buat' %}" class="btn" style="background:#fff; color:#1D4ED8; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+        <span>➕</span> Buat Laporan Baru
+      </a>
+      {% if user.is_staff %}
+      <a href="{% url 'dashboard' %}" class="btn" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35); color:#fff;">
+        <span>📊</span> Dashboard Staf
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- STATISTIK SUMMARY RIBBON -->
+  <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.2); display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px;">
+    {% if user.is_authenticated %}
+    <a href="?tab=saya" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
+      <div style="font-size:12px; font-weight:600; color:#BFDBFE; text-transform:uppercase;">Laporan Saya</div>
+      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.total }}</div>
+    </a>
+    <a href="?tab=saya&status=dikerjakan" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
+      <div style="font-size:12px; font-weight:600; color:#FDE68A; text-transform:uppercase;">Dalam Proses</div>
+      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.proses }}</div>
+    </a>
+    <a href="?tab=saya&status=selesai" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
+      <div style="font-size:12px; font-weight:600; color:#A7F3D0; text-transform:uppercase;">Terselesaikan</div>
+      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.selesai }}</div>
+    </a>
+    <a href="?tab=didukung" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
+      <div style="font-size:12px; font-weight:600; color:#E9D5FF; text-transform:uppercase;">Didukung Saya</div>
+      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.didukung }}</div>
+    </a>
+    {% else %}
+    <div style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px;">
+      <div style="font-size:12px; font-weight:600; color:#BFDBFE; text-transform:uppercase;">Total Laporan</div>
+      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ total_kampus }}</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px;">
+      <div style="font-size:12px; font-weight:600; color:#FDE68A; text-transform:uppercase;">Sedang Dikerjakan</div>
+      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ aktif }}</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px;">
+      <div style="font-size:12px; font-weight:600; color:#A7F3D0; text-transform:uppercase;">Selesai Bulan Ini</div>
+      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ selesai_bulan }}</div>
+    </div>
     {% endif %}
   </div>
-</section>
+</div>
 
-<!-- PENGUMUMAN PEMELIHARAAN KAMPUS -->
+<!-- BANNER PENGUMUMAN PEMELIHARAAN -->
 {% if pengumuman_list %}
-<div style="margin: 20px 0;">
+<div style="margin-bottom: 24px;">
   {% for p in pengumuman_list %}
-  <div class="card" style="margin-bottom:10px; border-left: 5px solid {% if p.tipe == 'darurat' %}#DC2626{% elif p.tipe == 'pemeliharaan' %}#D97706{% else %}#2563EB{% endif %}; background:#F8FAFC;">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+  <div class="card" style="margin-bottom:10px; border-left: 5px solid {% if p.tipe == 'darurat' %}#DC2626{% elif p.tipe == 'pemeliharaan' %}#D97706{% else %}#2563EB{% endif %}; background:#F8FAFC; padding:16px 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
       <div style="flex:1;">
         <span class="badge" style="background:{% if p.tipe == 'darurat' %}#FEE2E2; color:#991B1B{% elif p.tipe == 'pemeliharaan' %}#FEF3C7; color:#92400E{% else %}#E0F2FE; color:#0369A1{% endif %}; margin-bottom:6px;">
           📢 {{ p.get_tipe_display }}
         </span>
-        <h3 style="margin:4px 0 6px; font-size:16px;">{{ p.judul }}</h3>
-        <p style="margin:0; font-size:14px; color:#4B5563; line-height:1.4;">{{ p.isi }}</p>
+        <h3 style="margin:4px 0 6px; font-size:16px; color:#0F172A;">{{ p.judul }}</h3>
+        <p style="margin:0; font-size:14px; color:#475569; line-height:1.5;">{{ p.isi }}</p>
       </div>
-      <small class="mu" style="font-size:12px;">{{ p.dibuat|date:"d M Y" }}</small>
+      <small class="mu" style="font-size:12px; font-weight:500;">{{ p.dibuat|date:"d M Y" }}</small>
     </div>
   </div>
   {% endfor %}
 </div>
 {% endif %}
 
-<!-- METRIK SINGKAT -->
-<div class="grid">
-  <div class="card"><p class="mu">Laporan Aktif</p><p class="num">{{ aktif }}</p></div>
-  <div class="card"><p class="mu">Selesai Bulan Ini</p><p class="num">{{ selesai_bulan }}</p></div>
-</div>
-
-<!-- KATEGORI CHIPS DENGAN IKON -->
-<div class="chips">
-  <a class="chip {% if not kategori %}on{% endif %}" href="{% url 'beranda' %}">🌐 Semua Isu</a>
-  {% for kode, nama in kategori_list %}
-  <a class="chip {% if kode == kategori %}on{% endif %}" href="?kategori={{ kode }}">
-    {% if kode == 'kebersihan' %}🧹
-    {% elif kode == 'ac' %}❄️
-    {% elif kode == 'listrik' %}⚡
-    {% elif kode == 'air' %}🚰
-    {% elif kode == 'sarana' %}🪑
-    {% elif kode == 'keamanan' %}🦺
-    {% elif kode == 'aksesibilitas' %}♿
-    {% else %}📦{% endif %}
-    {{ nama }}
+<!-- TAB NAVIGASI PENGGUNA -->
+<div style="display:flex; gap:8px; border-bottom:2px solid var(--ln); overflow-x:auto; padding-bottom:2px; margin-bottom:20px;">
+  <a href="?tab=semua{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'semua' or not tab %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'semua' or not tab %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
+    🌐 Semua Laporan
   </a>
-  {% endfor %}
+  {% if user.is_authenticated %}
+  <a href="?tab=saya{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'saya' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'saya' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
+    👤 Laporan Saya ({{ user_stats.total }})
+  </a>
+  <a href="?tab=didukung{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'didukung' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'didukung' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
+    👍 Didukung Saya ({{ user_stats.didukung }})
+  </a>
+  {% endif %}
+  <a href="?tab=mendesak{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'mendesak' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'mendesak' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
+    🔥 Prioritas Mendesak
+  </a>
+  <a href="?tab=selesai{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'selesai' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'selesai' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
+    ✅ Berhasil Ditangani
+  </a>
 </div>
 
-<!-- LAPORAN TERBARU -->
-<div class="card">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--ln); padding-bottom:10px;">
-    <h2 style="margin:0; font-size:17px;">Laporan Terkini</h2>
-    <span class="mu" style="font-size:13px;">Dukungan warga menaikkan prioritas penanganan</span>
-  </div>
+<!-- TOOLBAR PENCARIAN & FILTER -->
+<div class="card" style="padding:16px 20px; margin-bottom:24px;">
+  <form method="get" action="{% url 'beranda' %}" style="margin:0;">
+    <input type="hidden" name="tab" value="{{ tab }}">
 
-  {% for l in terbaru %}
-  <div class="row">
-    <div style="flex:1; min-width:200px;">
-      <a class="t" href="{% url 'detail' l.pk %}" style="font-size:16px;">{{ l.judul }}</a>
-      <p class="mu" style="margin:2px 0 0; font-size:13px;">
-        📍 {{ l.lokasi }} &nbsp;•&nbsp; 
-        🏷️ {{ l.get_kategori_display }} &nbsp;•&nbsp; 
-        👤 {{ l.pelapor_display }} &nbsp;•&nbsp; 
-        👥 {{ l.pendukung.count }} dukungan
-      </p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <div style="flex:2; min-width:240px;">
+        <input type="text" name="q" value="{{ q }}" placeholder="🔍 Cari laporan, fasilitas, ruangan, gedung, atau masalah..." style="height:42px;">
+      </div>
+
+      <div style="flex:1; min-width:140px;">
+        <select name="status" style="height:42px;">
+          <option value="">Semua Status</option>
+          {% for code, label in status_list %}
+          <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="flex:1; min-width:150px;">
+        <select name="sort" style="height:42px;">
+          <option value="prioritas" {% if sort == "prioritas" %}selected{% endif %}>Urut: Prioritas Tertinggi</option>
+          <option value="terbaru" {% if sort == "terbaru" %}selected{% endif %}>Urut: Laporan Terbaru</option>
+          <option value="populer" {% if sort == "populer" %}selected{% endif %}>Urut: Dukungan Terbanyak</option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button type="submit" class="btn sm" style="height:42px; padding:0 18px;">Cari</button>
+        {% if q or status_filter or kategori or sort != "prioritas" %}
+        <a href="{% url 'beranda' %}?tab={{ tab }}" class="btn sm alt" style="height:42px; line-height:40px; padding:0 14px;">Reset</a>
+        {% endif %}
+      </div>
     </div>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <span class="pill skor">Skor {{ l.skor }}</span>
-      <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span>
+
+    <!-- CHIPS KATEGORI DI BAWAH PENCARIAN -->
+    <div class="chips" style="margin-top:14px; margin-bottom:0;">
+      <a class="chip {% if not kategori %}on{% endif %}" href="?tab={{ tab }}{% if q %}&q={{ q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+        🌐 Semua Isu
+      </a>
+      {% for kode, nama in kategori_list %}
+      <a class="chip {% if kode == kategori %}on{% endif %}" href="?tab={{ tab }}&kategori={{ kode }}{% if q %}&q={{ q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+        {% if kode == 'kebersihan' %}🧹
+        {% elif kode == 'ac' %}❄️
+        {% elif kode == 'listrik' %}⚡
+        {% elif kode == 'air' %}🚰
+        {% elif kode == 'sarana' %}🪑
+        {% elif kode == 'keamanan' %}🦺
+        {% elif kode == 'aksesibilitas' %}♿
+        {% else %}📦{% endif %}
+        {{ nama }}
+      </a>
+      {% endfor %}
     </div>
+  </form>
+</div>
+
+<!-- HEADER DAFTAR LAPORAN -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+  <div>
+    <h2 style="margin:0; font-size:20px;">
+      {% if tab == 'saya' %}Laporan Saya ({{ laporan_list|length }})
+      {% elif tab == 'didukung' %}Laporan yang Saya Dukung ({{ laporan_list|length }})
+      {% elif tab == 'mendesak' %}Laporan Mendesak ({{ laporan_list|length }})
+      {% elif tab == 'selesai' %}Laporan Selesai Diperbaiki ({{ laporan_list|length }})
+      {% else %}Daftar Aspirasi & Laporan Kampus ({{ laporan_list|length }}){% endif %}
+    </h2>
+    <p class="mu" style="margin:2px 0 0;">Dukungan warga kampus meningkatkan skor prioritas penanganan oleh staf fasilitas.</p>
+  </div>
+</div>
+
+<!-- DAFTAR FEED KARTU LAPORAN -->
+<div style="display:flex; flex-direction:column; gap:16px;">
+  {% for l in laporan_list %}
+  <div class="card card-hover" style="padding:20px; border-left: 5px solid {% if l.status == 'selesai' %}#059669{% elif l.status == 'dikerjakan' %}#D97706{% elif l.status == 'diverifikasi' %}#2563EB{% else %}#94A3B8{% endif %};">
+    
+    <!-- Top Bar: Tags & Status -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+      <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+        <span class="pill skor" style="font-size:11px;">Skor {{ l.skor }}</span>
+        <span class="badge urgensi-{{ l.urgensi }}">Urgensi {{ l.get_urgensi_display }}</span>
+        <span class="badge" style="background:#F1F5F9; color:#334155;">{{ l.get_kategori_display }}</span>
+        <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span>
+        {% if l.is_anonim %}<span class="badge" style="background:#F8FAFC; border:1px solid #E2E8F0; color:#64748B;">🔒 Anonim</span>{% endif %}
+      </div>
+
+      <div class="mu" style="font-size:12px; font-weight:500;">
+        🕒 {{ l.dibuat|date:"d M Y, H:i" }}
+        {% if l.target_selesai %}&nbsp;•&nbsp; <strong style="color:#2563EB;">🎯 Target: {{ l.target_selesai|date:"d M Y" }}</strong>{% endif %}
+      </div>
+    </div>
+
+    <!-- Main Content & Thumbnails -->
+    <div style="display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap;">
+      
+      <!-- Photos Preview (Jika ada) -->
+      <div style="display:flex; gap:10px; flex-shrink:0;">
+        {% if l.foto %}
+        <a href="{% url 'detail' l.pk %}" style="display:block; text-align:center;">
+          <img src="{{ l.foto.url }}" alt="Foto Masalah" style="width:100px; height:85px; object-fit:cover; border-radius:10px; border:1px solid var(--ln);">
+          <span style="font-size:10px; color:var(--mu); font-weight:600; display:block; margin-top:2px;">Kondisi Awal</span>
+        </a>
+        {% endif %}
+
+        {% if l.foto_perbaikan %}
+        <a href="{% url 'detail' l.pk %}" style="display:block; text-align:center;">
+          <img src="{{ l.foto_perbaikan.url }}" alt="Foto Perbaikan" style="width:100px; height:85px; object-fit:cover; border-radius:10px; border:2px solid #059669;">
+          <span style="font-size:10px; color:#059669; font-weight:700; display:block; margin-top:2px;">✓ Selesai Ditangani</span>
+        </a>
+        {% endif %}
+      </div>
+
+      <!-- Text Content -->
+      <div style="flex:1; min-width:260px;">
+        <h3 style="margin:0 0 6px; font-size:18px; line-height:1.3;">
+          <a href="{% url 'detail' l.pk %}" style="color:var(--ink); font-weight:700;">{{ l.judul }}</a>
+        </h3>
+
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; font-size:13px; color:var(--mu);">
+          <span>📍 <strong>{{ l.lokasi.nama }}</strong> ({{ l.lokasi.gedung }})</span>
+          <span>•</span>
+          <span>👤 Pelapor: <strong>{{ l.pelapor_display }}</strong></span>
+        </div>
+
+        <p style="margin:0; font-size:14px; color:#334155; line-height:1.5;">
+          {{ l.deskripsi|truncatechars:180 }}
+        </p>
+
+        <!-- Informasi Penanganan Petugas Jika Ada -->
+        {% if l.catatan_perbaikan %}
+        <div style="margin-top:10px; padding:8px 12px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; font-size:13px; color:#14532D;">
+          <strong>🛠️ Update Petugas:</strong> {{ l.catatan_perbaikan }}
+          {% if l.petugas %}<span style="color:#15803D;"> (oleh {{ l.petugas.username }})</span>{% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Bottom Action Bar (Dukung, Diskusi, Detail) -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--ln);">
+      
+      <!-- Quick Support / Upvote Button -->
+      <div style="display:flex; gap:10px; align-items:center;">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'dukung' l.pk %}" style="margin:0;">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button type="submit" class="btn sm {% if l.id in supported_ids %}btn-primary{% else %}alt{% endif %}" style="height:36px; padding:0 14px; border-radius:8px;">
+            <span>👍</span> {% if l.id in supported_ids %}Didukung{% else %}Saya juga mengalami{% endif %}
+            <span style="background:{% if l.id in supported_ids %}rgba(255,255,255,0.25){% else %}#E2E8F0{% endif %}; color:{% if l.id in supported_ids %}#fff{% else %}#1E293B{% endif %}; padding:2px 7px; border-radius:999px; font-size:11px; margin-left:4px;">
+              {{ l.pendukung.count }}
+            </span>
+          </button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn sm alt" style="height:36px; padding:0 14px; border-radius:8px;" title="Masuk untuk mendukung laporan">
+          <span>👍</span> Dukung ({{ l.pendukung.count }})
+        </a>
+        {% endif %}
+
+        <!-- Comments Counter Link -->
+        <a href="{% url 'detail' l.pk %}#komentar" class="btn sm alt" style="height:36px; padding:0 12px; border-radius:8px;">
+          <span>💬</span> {{ l.komentar.count }} Tanggapan
+        </a>
+      </div>
+
+      <!-- Detail Link -->
+      <div>
+        <a href="{% url 'detail' l.pk %}" class="btn sm alt" style="height:36px; padding:0 16px; border-radius:8px; font-weight:600;">
+          Lihat Perkembangan →
+        </a>
+      </div>
+
+    </div>
+
   </div>
   {% empty %}
-  <p class="mu" style="text-align:center; padding:20px 0;">Belum ada laporan di kategori ini.</p>
+  <div class="card" style="text-align:center; padding:48px 24px;">
+    <div style="font-size:42px; margin-bottom:12px;">🌱</div>
+    <h3 style="margin:0 0 8px; font-size:18px;">Belum ada laporan di bagian ini</h3>
+    <p class="mu" style="margin:0 0 20px; font-size:14px;">Tidak ditemukan laporan yang sesuai dengan tab, kategori, atau kata kunci pencarian Anda.</p>
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <a href="{% url 'buat' %}" class="btn sm">Buat Laporan Baru</a>
+      <a href="{% url 'beranda' %}" class="btn sm alt">Tampilkan Semua Laporan</a>
+    </div>
+  </div>
   {% endfor %}
 </div>
 {% endblock %}

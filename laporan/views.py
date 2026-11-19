@@ -22,20 +22,92 @@ staf_only = user_passes_test(lambda u: u.is_staff, login_url="login")
 
 
 def beranda(request):
-    qs = Laporan.objects.select_related("lokasi", "pelapor")
-    kategori = request.GET.get("kategori")
+    tab = request.GET.get("tab", "semua")
+    kategori = request.GET.get("kategori", "")
+    status_filter = request.GET.get("status", "")
+    sort = request.GET.get("sort", "prioritas")
+    q = request.GET.get("q", "").strip()
+
+    qs = Laporan.objects.select_related("lokasi", "pelapor", "petugas").prefetch_related("pendukung", "komentar")
+
+    # Tab Filter
+    if tab == "saya" and request.user.is_authenticated:
+        qs = qs.filter(pelapor=request.user)
+    elif tab == "didukung" and request.user.is_authenticated:
+        qs = qs.filter(pendukung=request.user)
+    elif tab == "mendesak":
+        qs = qs.exclude(status="selesai")
+    elif tab == "selesai":
+        qs = qs.filter(status="selesai")
+
+    # Kategori Filter
     if kategori:
         qs = qs.filter(kategori=kategori)
+
+    # Status Filter
+    if status_filter:
+        qs = qs.filter(status=status_filter)
+
+    # Pencarian Kata Kunci
+    if q:
+        qs = qs.filter(
+            Q(judul__icontains=q) |
+            Q(deskripsi__icontains=q) |
+            Q(lokasi__nama__icontains=q) |
+            Q(lokasi__gedung__icontains=q)
+        )
+
+    laporan_list = [services.dengan_skor(l) for l in qs]
+
+    # Pengurutan
+    if sort == "terbaru":
+        laporan_list.sort(key=lambda l: l.dibuat, reverse=True)
+    elif sort == "populer":
+        laporan_list.sort(key=lambda l: l.pendukung.count(), reverse=True)
+    else:  # prioritas
+        if tab == "mendesak":
+            laporan_list.sort(key=lambda l: l.skor, reverse=True)
+        else:
+            laporan_list.sort(key=lambda l: (1 if l.status == "selesai" else 0, -l.skor))
+
     awal_bulan = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     pengumuman_list = Pengumuman.objects.filter(aktif=True)[:3]
+
+    # User statistics (Personal Dashboard overview)
+    user_stats = {}
+    if request.user.is_authenticated:
+        user_laporan = Laporan.objects.filter(pelapor=request.user)
+        user_stats = {
+            "total": user_laporan.count(),
+            "proses": user_laporan.exclude(status="selesai").count(),
+            "selesai": user_laporan.filter(status="selesai").count(),
+            "didukung": request.user.dukungan.count(),
+        }
+
+    # Campus statistics overview
+    semua_laporan_count = Laporan.objects.count()
+    aktif_count = Laporan.objects.exclude(status="selesai").count()
+    selesai_bulan = Laporan.objects.filter(
+        status="selesai", riwayat__status="selesai", riwayat__waktu__gte=awal_bulan
+    ).distinct().count()
+
+    supported_ids = set(request.user.dukungan.values_list("id", flat=True)) if request.user.is_authenticated else set()
+
     return render(request, "beranda.html", {
-        "aktif": Laporan.objects.exclude(status="selesai").count(),
-        "selesai_bulan": Laporan.objects.filter(
-            status="selesai", riwayat__status="selesai", riwayat__waktu__gte=awal_bulan).distinct().count(),
-        "terbaru": [services.dengan_skor(l) for l in qs[:8]],
-        "kategori_list": Laporan.KATEGORI,
+        "laporan_list": laporan_list,
+        "tab": tab,
         "kategori": kategori,
+        "status_filter": status_filter,
+        "sort": sort,
+        "q": q,
+        "kategori_list": Laporan.KATEGORI,
+        "status_list": Laporan.STATUS,
         "pengumuman_list": pengumuman_list,
+        "user_stats": user_stats,
+        "aktif": aktif_count,
+        "selesai_bulan": selesai_bulan,
+        "total_kampus": semua_laporan_count,
+        "supported_ids": supported_ids,
     })
 
 
@@ -92,8 +164,13 @@ def dukung(request, pk):
     laporan = get_object_or_404(Laporan, pk=pk)
     if laporan.pendukung.filter(pk=request.user.pk).exists():
         laporan.pendukung.remove(request.user)
+        messages.info(request, f"Dukungan untuk '{laporan.judul}' dibatalkan.")
     else:
         laporan.pendukung.add(request.user)
+        messages.success(request, f"Dukungan Anda untuk '{laporan.judul}' telah dicatat!")
+    next_url = request.POST.get("next") or request.GET.get("next")
+    if next_url:
+        return redirect(next_url)
     return redirect("detail", pk=pk)
 
 
