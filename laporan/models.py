@@ -33,7 +33,7 @@ class Laporan(models.Model):
     lokasi = models.ForeignKey(Lokasi, on_delete=models.PROTECT)
     kategori = models.CharField("Kategori fasilitas", max_length=50)
     judul = models.CharField("Judul singkat", max_length=120)
-    deskripsi = models.TextField()
+    deskripsi = models.TextField(blank=True, default="")
     foto = models.ImageField("Foto kerusakan", upload_to="laporan/", blank=True)
     urgensi = models.PositiveSmallIntegerField("Tingkat urgensi", choices=URGENSI, default=2)
     status = models.CharField(max_length=20, choices=STATUS, default="dilaporkan")
