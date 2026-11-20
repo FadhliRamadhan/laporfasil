@@ -38,6 +38,47 @@
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
   --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }
+/* DARK MODE VARIABLES */
+[data-theme="dark"] {
+  --primary: #3B82F6;
+  --primary-hover: #60A5FA;
+  --primary-light: rgba(59, 130, 246, 0.15);
+  --primary-border: #1E40AF;
+  --bg: #0F172A;
+  --surface: #1E293B;
+  --ink: #F8FAFC;
+  --ink-secondary: #CBD5E1;
+  --mu: #94A3B8;
+  --ln: #334155;
+  --ln-dark: #475569;
+  --success-light: rgba(5, 150, 105, 0.15);
+  --warning-light: rgba(217, 119, 6, 0.15);
+  --danger-light: rgba(220, 38, 38, 0.15);
+}
+
+/* Override hardcoded light colors in base.html */
+[data-theme="dark"] header {
+  background: rgba(15, 23, 42, 0.9);
+}
+[data-theme="dark"] .brand-text {
+  color: var(--ink);
+}
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .chip,
+[data-theme="dark"] a.btn.alt,
+[data-theme="dark"] button.alt,
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] footer {
+  background: var(--surface);
+  color: var(--ink);
+}
+[data-theme="dark"] .chip:hover,
+[data-theme="dark"] a.btn.alt:hover,
+[data-theme="dark"] button.alt:hover {
+  background: #334155;
+}
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -394,6 +435,7 @@ footer {
         <a class="nav-link" href="{% url 'login' %}">Masuk</a>
         <a class="btn sm alt" href="{% url 'daftar' %}">Daftar Akun</a>
       {% endif %}
+      <button id="theme-toggle" class="btn sm alt" type="button" title="Ganti Tema" aria-label="Ganti Tema">🌙</button>
     </div>
   </nav>
 </header>
@@ -419,5 +461,28 @@ footer {
     </div>
   </div>
 </footer>
+<script>
+  (function() {
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('theme-toggle');
+    const savedTheme = localStorage.getItem('theme') || 
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    function applyTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      if (toggleBtn) toggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    applyTheme(savedTheme);
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const nextTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+      });
+    }
+  })();
+</script>
 </body>
 </html>
