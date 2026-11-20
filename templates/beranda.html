@@ -2,6 +2,196 @@
 {% block title %}Dashboard Aspirasi & Fasilitas Kampus - LaporFasil{% endblock %}
 
 {% block content %}
+<style>
+/* FOTO PREVIEW & LIGHTBOX DI DASHBOARD */
+.photo-gallery-preview {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.photo-thumb-wrapper {
+  position: relative;
+  width: 140px;
+  height: 102px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #F1F5F9;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  border: 1px solid var(--ln);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.photo-thumb-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+}
+.photo-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.photo-thumb-wrapper:hover .photo-thumb {
+  transform: scale(1.06);
+}
+.thumb-success {
+  border: 2px solid #059669;
+}
+.photo-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 2;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+.badge-awal {
+  background: rgba(15, 23, 42, 0.85);
+  color: #F8FAFC;
+}
+.badge-selesai {
+  background: #059669;
+  color: #FFFFFF;
+}
+.photo-hover-zoom {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 3;
+}
+.photo-hover-zoom span {
+  background: rgba(255, 255, 255, 0.95);
+  color: #0F172A;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.photo-thumb-wrapper:hover .photo-hover-zoom {
+  opacity: 1;
+}
+.photo-thumb-placeholder {
+  width: 95px;
+  height: 102px;
+  border-radius: 12px;
+  background: #F8FAFC;
+  border: 1px dashed #CBD5E1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #94A3B8;
+}
+
+/* LIGHTBOX MODAL */
+.lightbox-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.lightbox-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lightbox-content {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 840px;
+  width: 100%;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+  transform: scale(0.95);
+  transition: transform 0.2s ease;
+}
+.lightbox-modal.active .lightbox-content {
+  transform: scale(1);
+}
+.lightbox-header {
+  padding: 16px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--ln);
+  background: #F8FAFC;
+}
+.lightbox-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.lightbox-close {
+  background: #E2E8F0;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  transition: all 0.15s ease;
+}
+.lightbox-close:hover {
+  background: #CBD5E1;
+  color: #0F172A;
+}
+.lightbox-body {
+  padding: 18px;
+  background: #090D16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 360px;
+}
+.lightbox-body img {
+  max-width: 100%;
+  max-height: 62vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.lightbox-footer {
+  padding: 14px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--ln);
+  background: #F8FAFC;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+</style>
 <!-- WELCOME BANNER / USER OVERVIEW -->
 <div class="hero">
   <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
@@ -184,12 +374,17 @@
   <div class="card card-hover" style="padding:20px; border-left: 5px solid {% if l.status == 'selesai' %}#059669{% elif l.status == 'dikerjakan' %}#D97706{% elif l.status == 'diverifikasi' %}#2563EB{% else %}#94A3B8{% endif %};">
     
     <!-- Top Bar: Tags & Status -->
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <span class="pill skor" style="font-size:11px;">Skor {{ l.skor }}</span>
         <span class="badge urgensi-{{ l.urgensi }}">Urgensi {{ l.get_urgensi_display }}</span>
         <span class="badge" style="background:#F1F5F9; color:#334155;">{{ l.get_kategori_display }}</span>
         <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span>
+        {% if l.foto and l.foto_perbaikan %}
+        <span class="badge" style="background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0; font-weight:700;">📸 2 Foto (Sebelum & Sesudah)</span>
+        {% elif l.foto or l.foto_perbaikan %}
+        <span class="badge" style="background:#EFF6FF; color:#1E40AF; border:1px solid #BFDBFE; font-weight:700;">📸 1 Foto Bukti</span>
+        {% endif %}
         {% if l.is_anonim %}<span class="badge" style="background:#F8FAFC; border:1px solid #E2E8F0; color:#64748B;">🔒 Anonim</span>{% endif %}
       </div>
 
@@ -199,25 +394,38 @@
       </div>
     </div>
 
-    <!-- Main Content & Thumbnails -->
+    <!-- Main Content & Photo Gallery -->
     <div style="display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap;">
       
-      <!-- Photos Preview (Jika ada) -->
-      <div style="display:flex; gap:10px; flex-shrink:0;">
+      <!-- Photos Gallery Preview (Dapat diklik untuk Zoom Lightbox) -->
+      {% if l.foto or l.foto_perbaikan %}
+      <div class="photo-gallery-preview">
         {% if l.foto %}
-        <a href="{% url 'detail' l.pk %}" style="display:block; text-align:center;">
-          <img src="{{ l.foto.url }}" alt="Foto Masalah" style="width:100px; height:85px; object-fit:cover; border-radius:10px; border:1px solid var(--ln);">
-          <span style="font-size:10px; color:var(--mu); font-weight:600; display:block; margin-top:2px;">Kondisi Awal</span>
-        </a>
+        <div class="photo-thumb-wrapper" onclick="openLightbox('{{ l.foto.url }}', '{{ l.judul|escapejs }}', 'Kondisi Awal (Pelapor)', '{{ l.lokasi.nama|escapejs }}, {{ l.lokasi.gedung|escapejs }}', '{% url 'detail' l.pk %}')" title="Klik untuk melihat foto lebih besar">
+          <div class="photo-badge badge-awal">📷 Kondisi Awal</div>
+          <img src="{{ l.foto.url }}" alt="Foto: {{ l.judul }}" class="photo-thumb">
+          <div class="photo-hover-zoom">
+            <span>🔍 Perbesar</span>
+          </div>
+        </div>
         {% endif %}
 
         {% if l.foto_perbaikan %}
-        <a href="{% url 'detail' l.pk %}" style="display:block; text-align:center;">
-          <img src="{{ l.foto_perbaikan.url }}" alt="Foto Perbaikan" style="width:100px; height:85px; object-fit:cover; border-radius:10px; border:2px solid #059669;">
-          <span style="font-size:10px; color:#059669; font-weight:700; display:block; margin-top:2px;">✓ Selesai Ditangani</span>
-        </a>
+        <div class="photo-thumb-wrapper" onclick="openLightbox('{{ l.foto_perbaikan.url }}', '{{ l.judul|escapejs }}', 'Hasil Perbaikan Staf', '{{ l.lokasi.nama|escapejs }}, {{ l.lokasi.gedung|escapejs }}', '{% url 'detail' l.pk %}')" title="Klik untuk melihat foto lebih besar">
+          <div class="photo-badge badge-selesai">✨ Hasil Perbaikan</div>
+          <img src="{{ l.foto_perbaikan.url }}" alt="Foto Perbaikan: {{ l.judul }}" class="photo-thumb thumb-success">
+          <div class="photo-hover-zoom">
+            <span>🔍 Perbesar</span>
+          </div>
+        </div>
         {% endif %}
       </div>
+      {% else %}
+      <div class="photo-thumb-placeholder" title="Tidak ada foto lampiran">
+        <span style="font-size:24px;">📷</span>
+        <span style="font-size:11px; font-weight:600; margin-top:2px;">Tanpa Foto</span>
+      </div>
+      {% endif %}
 
       <!-- Text Content -->
       <div style="flex:1; min-width:260px;">
@@ -296,4 +504,67 @@
   </div>
   {% endfor %}
 </div>
+
+<!-- LIGHTBOX MODAL UNTUK PREVIEW FOTO PENUH -->
+<div id="photoLightbox" class="lightbox-modal" onclick="closeLightbox(event)">
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <div class="lightbox-header">
+      <div>
+        <span id="lightboxBadge" class="lightbox-badge">Kondisi Awal</span>
+        <h3 id="lightboxTitle" style="margin:4px 0 0; font-size:16px; color:#0F172A; font-weight:700;">Judul Laporan</h3>
+        <p id="lightboxLocation" style="margin:3px 0 0; font-size:13px; color:#64748B;">📍 Lokasi</p>
+      </div>
+      <button type="button" class="lightbox-close" onclick="closeLightbox()" title="Tutup (Esc)">✕</button>
+    </div>
+    <div class="lightbox-body">
+      <img id="lightboxImg" src="" alt="Preview Foto Dokumentasi Fasilitas">
+    </div>
+    <div class="lightbox-footer">
+      <span style="font-size:12px; color:#64748B;">💡 Klik di luar jendela atau tekan tombol <kbd style="background:#E2E8F0; padding:2px 6px; border-radius:4px; font-size:11px;">Esc</kbd> untuk menutup</span>
+      <a id="lightboxDetailBtn" href="#" class="btn sm" style="text-decoration:none; padding:8px 16px; font-weight:600;">Lihat Detail Laporan Lengkap →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function openLightbox(imgSrc, title, badge, location, detailUrl) {
+  const modal = document.getElementById('photoLightbox');
+  const img = document.getElementById('lightboxImg');
+  const badgeElem = document.getElementById('lightboxBadge');
+  
+  img.src = imgSrc;
+  document.getElementById('lightboxTitle').innerText = title;
+  badgeElem.innerText = badge;
+  document.getElementById('lightboxLocation').innerText = '📍 ' + location;
+  document.getElementById('lightboxDetailBtn').href = detailUrl;
+
+  if (badge.includes('Perbaikan')) {
+    badgeElem.style.background = '#ECFDF5';
+    badgeElem.style.color = '#065F46';
+    badgeElem.style.border = '1px solid #A7F3D0';
+  } else {
+    badgeElem.style.background = '#FEE2E2';
+    badgeElem.style.color = '#991B1B';
+    badgeElem.style.border = '1px solid #FECACA';
+  }
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(event) {
+  if (event && event.target && event.target !== document.getElementById('photoLightbox') && !event.target.classList.contains('lightbox-close')) {
+    return;
+  }
+  const modal = document.getElementById('photoLightbox');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeLightbox();
+  }
+});
+</script>
 {% endblock %}

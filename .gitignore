@@ -1,5 +1,9 @@
 db.sqlite3
-media/
+media/*
+!media/laporan/
+!media/laporan/*.jpg
+!media/perbaikan/
+!media/perbaikan/*.jpg
 __pycache__/
 *.pyc
 .venv/
