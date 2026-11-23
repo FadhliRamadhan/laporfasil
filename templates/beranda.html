@@ -3,7 +3,7 @@
 
 {% block content %}
 <style>
-/* FOTO PREVIEW & LIGHTBOX DI DASHBOARD */
+/* FOTO PREVIEW & LIGHTBOX (GLASSMORPHISM STYLE) */
 .photo-gallery-preview {
   display: flex;
   gap: 12px;
@@ -14,17 +14,18 @@
   position: relative;
   width: 140px;
   height: 102px;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  background: #F1F5F9;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  border: 1px solid var(--ln);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(18, 12, 36, 0.85);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .photo-thumb-wrapper:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45), 0 0 16px rgba(168, 85, 247, 0.35);
+  border-color: rgba(204, 255, 0, 0.5);
 }
 .photo-thumb {
   width: 100%;
@@ -34,10 +35,10 @@
   transition: transform 0.3s ease;
 }
 .photo-thumb-wrapper:hover .photo-thumb {
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
 .thumb-success {
-  border: 2px solid #059669;
+  border: 2px solid #10B981;
 }
 .photo-badge {
   position: absolute;
@@ -48,21 +49,25 @@
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 999px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   pointer-events: none;
+  backdrop-filter: blur(8px);
 }
 .badge-awal {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(11, 8, 24, 0.85);
   color: #F8FAFC;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .badge-selesai {
-  background: #059669;
+  background: #10B981;
   color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
 }
 .photo-hover-zoom {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(11, 8, 24, 0.55);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,13 +76,13 @@
   z-index: 3;
 }
 .photo-hover-zoom span {
-  background: rgba(255, 255, 255, 0.95);
-  color: #0F172A;
+  background: #CCFF00;
+  color: #0B0818;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 4px 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 0 12px rgba(204, 255, 0, 0.5);
 }
 .photo-thumb-wrapper:hover .photo-hover-zoom {
   opacity: 1;
@@ -85,24 +90,25 @@
 .photo-thumb-placeholder {
   width: 95px;
   height: 102px;
-  border-radius: 12px;
-  background: #F8FAFC;
-  border: 1px dashed #CBD5E1;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.16);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #94A3B8;
+  color: #A78BFA;
 }
 
-/* LIGHTBOX MODAL */
+/* LIGHTBOX MODAL (GLASSMORPHISM STYLE) */
 .lightbox-modal {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(6px);
+  background: rgba(7, 5, 16, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,15 +122,16 @@
   pointer-events: auto;
 }
 .lightbox-content {
-  background: #ffffff;
-  border-radius: 16px;
-  max-width: 840px;
+  background: #140E2A;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  max-width: 860px;
   width: 100%;
   max-height: 94vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.65), 0 0 30px rgba(168, 85, 247, 0.2);
   transform: scale(0.95);
   transition: transform 0.2s ease;
 }
@@ -136,8 +143,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid var(--ln);
-  background: #F8FAFC;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #181133;
 }
 .lightbox-badge {
   display: inline-block;
@@ -148,8 +155,8 @@
   margin-bottom: 4px;
 }
 .lightbox-close {
-  background: #E2E8F0;
-  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -158,16 +165,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #334155;
+  color: #F8FAFC;
   transition: all 0.15s ease;
 }
 .lightbox-close:hover {
-  background: #CBD5E1;
-  color: #0F172A;
+  background: #EF4444;
+  color: #FFFFFF;
+  border-color: #EF4444;
+  transform: scale(1.05);
 }
 .lightbox-body {
   padding: 18px;
-  background: #090D16;
+  background: #090614;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,16 +187,17 @@
   max-width: 100%;
   max-height: 62vh;
   object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .lightbox-footer {
   padding: 14px 22px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--ln);
-  background: #F8FAFC;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: #181133;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -197,60 +207,70 @@
   <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
     <div>
       {% if user.is_authenticated %}
-      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.18); padding:4px 12px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:10px;">
-        👋 Selamat Datang, {{ user.first_name|default:user.username }}
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.18); padding:4px 14px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:12px;">
+        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#CCFF00; box-shadow:0 0 8px #CCFF00;"></span>
+        Selamat Datang, {{ user.first_name|default:user.username }}
       </div>
       <h1>Dashboard Aspirasi & Fasilitas Kampus</h1>
       <p>Pantau status perbaikan fasilitas yang kamu laporkan, dukung keluhan mahasiswa lain, atau ajukan laporan fasilitas baru.</p>
       {% else %}
-      <h1>Ada Fasilitas Rusak atau Tempat Kotor di Kampus?</h1>
+      <h1>Ada Fasilitas Rusak atau Kendala di Kampus?</h1>
       <p>Laporkan kerusakan fisik, kebersihan lingkungan, keamanan, atau sarana belajar dalam hitungan detik. Pantau penanganannya secara transparan.</p>
       {% endif %}
     </div>
 
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      <a href="{% url 'buat' %}" class="btn" style="background:#fff; color:#1D4ED8; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-        <span>➕</span> Buat Laporan Baru
+      <a href="{% url 'buat' %}" class="btn btn-lime" style="font-weight:800; font-size:14px; padding:0 20px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Buat Laporan Baru
       </a>
       {% if user.is_staff %}
-      <a href="{% url 'dashboard' %}" class="btn" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35); color:#fff;">
-        <span>📊</span> Dashboard Staf
+      <a href="{% url 'dashboard' %}" class="btn alt" style="backdrop-filter:blur(14px);">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Dashboard Staf
       </a>
       {% endif %}
     </div>
   </div>
 
   <!-- STATISTIK SUMMARY RIBBON -->
-  <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.2); display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px;">
+  <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.15); display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px;">
     {% if user.is_authenticated %}
-    <a href="?tab=saya" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
-      <div style="font-size:12px; font-weight:600; color:#BFDBFE; text-transform:uppercase;">Laporan Saya</div>
-      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.total }}</div>
+    <a href="?tab=saya" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:0.04em;">Laporan Saya</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.total }}</div>
+      <div style="height:3px; width:42px; background:#A855F7; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #A855F7;"></div>
     </a>
-    <a href="?tab=saya&status=dikerjakan" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
-      <div style="font-size:12px; font-weight:600; color:#FDE68A; text-transform:uppercase;">Dalam Proses</div>
-      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.proses }}</div>
+    <a href="?tab=saya&status=dikerjakan" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#FDE68A; text-transform:uppercase; letter-spacing:0.04em;">Dalam Proses</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.proses }}</div>
+      <div style="height:3px; width:42px; background:#F59E0B; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #F59E0B;"></div>
     </a>
-    <a href="?tab=saya&status=selesai" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
-      <div style="font-size:12px; font-weight:600; color:#A7F3D0; text-transform:uppercase;">Terselesaikan</div>
-      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.selesai }}</div>
+    <a href="?tab=saya&status=selesai" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#6EE7B7; text-transform:uppercase; letter-spacing:0.04em;">Terselesaikan</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.selesai }}</div>
+      <div style="height:3px; width:42px; background:#10B981; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #10B981;"></div>
     </a>
-    <a href="?tab=didukung" style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; text-decoration:none; color:#fff; transition:all 0.15s ease;">
-      <div style="font-size:12px; font-weight:600; color:#E9D5FF; text-transform:uppercase;">Didukung Saya</div>
-      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ user_stats.didukung }}</div>
+    <a href="?tab=didukung" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#CCFF00; text-transform:uppercase; letter-spacing:0.04em;">Didukung Saya</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.didukung }}</div>
+      <div style="height:3px; width:42px; background:#CCFF00; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #CCFF00;"></div>
     </a>
     {% else %}
-    <div style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px;">
-      <div style="font-size:12px; font-weight:600; color:#BFDBFE; text-transform:uppercase;">Total Laporan</div>
-      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ total_kampus }}</div>
+    <div style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px;">
+      <div style="font-size:11px; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:0.04em;">Total Laporan</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ total_kampus }}</div>
+      <div style="height:3px; width:42px; background:#A855F7; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #A855F7;"></div>
     </div>
-    <div style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px;">
-      <div style="font-size:12px; font-weight:600; color:#FDE68A; text-transform:uppercase;">Sedang Dikerjakan</div>
-      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ aktif }}</div>
+    <div style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px;">
+      <div style="font-size:11px; font-weight:700; color:#FDE68A; text-transform:uppercase; letter-spacing:0.04em;">Sedang Dikerjakan</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ aktif }}</div>
+      <div style="height:3px; width:42px; background:#F59E0B; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #F59E0B;"></div>
     </div>
-    <div style="background:rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px;">
-      <div style="font-size:12px; font-weight:600; color:#A7F3D0; text-transform:uppercase;">Selesai Bulan Ini</div>
-      <div style="font-size:24px; font-weight:800; margin-top:2px;">{{ selesai_bulan }}</div>
+    <div style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px;">
+      <div style="font-size:11px; font-weight:700; color:#6EE7B7; text-transform:uppercase; letter-spacing:0.04em;">Selesai Bulan Ini</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ selesai_bulan }}</div>
+      <div style="height:3px; width:42px; background:#10B981; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #10B981;"></div>
     </div>
     {% endif %}
   </div>
@@ -260,14 +280,15 @@
 {% if pengumuman_list %}
 <div style="margin-bottom: 24px;">
   {% for p in pengumuman_list %}
-  <div class="card" style="margin-bottom:10px; border-left: 5px solid {% if p.tipe == 'darurat' %}#DC2626{% elif p.tipe == 'pemeliharaan' %}#D97706{% else %}#2563EB{% endif %}; background:#F8FAFC; padding:16px 20px;">
+  <div class="card" style="margin-bottom:10px; border-left: 5px solid {% if p.tipe == 'darurat' %}#EF4444{% elif p.tipe == 'pemeliharaan' %}#F59E0B{% else %}#A855F7{% endif %}; background:rgba(28, 20, 56, 0.7); padding:16px 20px;">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
       <div style="flex:1;">
-        <span class="badge" style="background:{% if p.tipe == 'darurat' %}#FEE2E2; color:#991B1B{% elif p.tipe == 'pemeliharaan' %}#FEF3C7; color:#92400E{% else %}#E0F2FE; color:#0369A1{% endif %}; margin-bottom:6px;">
-          📢 {{ p.get_tipe_display }}
+        <span class="badge" style="background:{% if p.tipe == 'darurat' %}rgba(239, 68, 68, 0.2); color:#FCA5A5; border:1px solid rgba(239, 68, 68, 0.35){% elif p.tipe == 'pemeliharaan' %}rgba(245, 158, 11, 0.2); color:#FDE68A; border:1px solid rgba(245, 158, 11, 0.35){% else %}rgba(168, 85, 247, 0.2); color:#DDD6FE; border:1px solid rgba(168, 85, 247, 0.35){% endif %}; margin-bottom:6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+          {{ p.get_tipe_display }}
         </span>
-        <h3 style="margin:4px 0 6px; font-size:16px; color:#0F172A;">{{ p.judul }}</h3>
-        <p style="margin:0; font-size:14px; color:#475569; line-height:1.5;">{{ p.isi }}</p>
+        <h3 style="margin:4px 0 6px; font-size:16px; color:#FFFFFF;">{{ p.judul }}</h3>
+        <p style="margin:0; font-size:14px; color:#DDD6FE; line-height:1.5;">{{ p.isi }}</p>
       </div>
       <small class="mu" style="font-size:12px; font-weight:500;">{{ p.dibuat|date:"d M Y" }}</small>
     </div>
@@ -276,24 +297,29 @@
 </div>
 {% endif %}
 
-<!-- TAB NAVIGASI PENGGUNA -->
-<div style="display:flex; gap:8px; border-bottom:2px solid var(--ln); overflow-x:auto; padding-bottom:2px; margin-bottom:20px;">
-  <a href="?tab=semua{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'semua' or not tab %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'semua' or not tab %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
-    🌐 Semua Laporan
+<!-- TAB NAVIGASI PENGGUNA (CLEAN ICONS) -->
+<div style="display:flex; gap:8px; border-bottom:1px solid rgba(255,255,255,0.15); overflow-x:auto; padding-bottom:4px; margin-bottom:22px;">
+  <a href="?tab=semua{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'semua' or not tab %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'semua' or not tab %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'semua' or not tab %}#FFFFFF{% else %}#A78BFA{% endif %};">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+    Semua Laporan
   </a>
   {% if user.is_authenticated %}
-  <a href="?tab=saya{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'saya' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'saya' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
-    👤 Laporan Saya ({{ user_stats.total }})
+  <a href="?tab=saya{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'saya' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'saya' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'saya' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Laporan Saya ({{ user_stats.total }})
   </a>
-  <a href="?tab=didukung{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'didukung' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'didukung' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
-    👍 Didukung Saya ({{ user_stats.didukung }})
+  <a href="?tab=didukung{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'didukung' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'didukung' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'didukung' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3"/><path d="M10 22h7.5"/></svg>
+    Didukung Saya ({{ user_stats.didukung }})
   </a>
   {% endif %}
-  <a href="?tab=mendesak{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'mendesak' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'mendesak' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
-    🔥 Prioritas Mendesak
+  <a href="?tab=mendesak{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'mendesak' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'mendesak' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'mendesak' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+    Prioritas Mendesak
   </a>
-  <a href="?tab=selesai{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'selesai' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'selesai' %}#2563EB{% else %}transparent{% endif %}; border-radius:8px 8px 0 0; font-size:14px; font-weight:700;">
-    ✅ Berhasil Ditangani
+  <a href="?tab=selesai{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'selesai' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'selesai' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'selesai' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    Berhasil Ditangani
   </a>
 </div>
 
@@ -303,8 +329,9 @@
     <input type="hidden" name="tab" value="{{ tab }}">
 
     <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-      <div style="flex:2; min-width:240px;">
-        <input type="text" name="q" value="{{ q }}" placeholder="🔍 Cari laporan, fasilitas, ruangan, gedung, atau masalah..." style="height:42px;">
+      <div style="flex:2; min-width:240px; position:relative;">
+        <input type="text" name="q" value="{{ q }}" placeholder="Cari laporan, fasilitas, ruangan, gedung, atau masalah..." style="height:42px; padding-left:38px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:13px; pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </div>
 
       <div style="flex:1; min-width:140px;">
@@ -332,21 +359,31 @@
       </div>
     </div>
 
-    <!-- CHIPS KATEGORI DI BAWAH PENCARIAN -->
+    <!-- CHIPS KATEGORI (CLEAN MODERN SVGS) -->
     <div class="chips" style="margin-top:14px; margin-bottom:0;">
       <a class="chip {% if not kategori %}on{% endif %}" href="?tab={{ tab }}{% if q %}&q={{ q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
-        🌐 Semua Isu
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        Semua Isu
       </a>
       {% for kode, nama in kategori_list %}
       <a class="chip {% if kode == kategori %}on{% endif %}" href="?tab={{ tab }}&kategori={{ kode }}{% if q %}&q={{ q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
-        {% if kode == 'kebersihan' %}🧹
-        {% elif kode == 'ac' %}❄️
-        {% elif kode == 'listrik' %}⚡
-        {% elif kode == 'air' %}🚰
-        {% elif kode == 'sarana' %}🪑
-        {% elif kode == 'keamanan' %}🦺
-        {% elif kode == 'aksesibilitas' %}♿
-        {% else %}📦{% endif %}
+        {% if kode == 'kebersihan' %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        {% elif kode == 'ac' %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+        {% elif kode == 'listrik' %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        {% elif kode == 'air' %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        {% elif kode == 'sarana' %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        {% elif kode == 'keamanan' %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {% elif kode == 'aksesibilitas' %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
+        {% else %}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        {% endif %}
         {{ nama }}
       </a>
       {% endfor %}
@@ -381,16 +418,28 @@
         <span class="badge" style="background:#F1F5F9; color:#334155;">{{ l.get_kategori_display }}</span>
         <span class="pill s-{{ l.status }}">{{ l.get_status_display }}</span>
         {% if l.foto and l.foto_perbaikan %}
-        <span class="badge" style="background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0; font-weight:700;">📸 2 Foto (Sebelum & Sesudah)</span>
+        <span class="badge" style="background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0; font-weight:700;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          2 Foto (Sebelum & Sesudah)
+        </span>
         {% elif l.foto or l.foto_perbaikan %}
-        <span class="badge" style="background:#EFF6FF; color:#1E40AF; border:1px solid #BFDBFE; font-weight:700;">📸 1 Foto Bukti</span>
+        <span class="badge" style="background:#EFF6FF; color:#1E40AF; border:1px solid #BFDBFE; font-weight:700;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          1 Foto Bukti
+        </span>
         {% endif %}
-        {% if l.is_anonim %}<span class="badge" style="background:#F8FAFC; border:1px solid #E2E8F0; color:#64748B;">🔒 Anonim</span>{% endif %}
+        {% if l.is_anonim %}
+        <span class="badge" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#94A3B8;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Anonim
+        </span>
+        {% endif %}
       </div>
 
-      <div class="mu" style="font-size:12px; font-weight:500;">
-        🕒 {{ l.dibuat|date:"d M Y, H:i" }}
-        {% if l.target_selesai %}&nbsp;•&nbsp; <strong style="color:#2563EB;">🎯 Target: {{ l.target_selesai|date:"d M Y" }}</strong>{% endif %}
+      <div class="mu" style="font-size:12px; font-weight:500; display:inline-flex; align-items:center; gap:4px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        {{ l.dibuat|date:"d M Y, H:i" }}
+        {% if l.target_selesai %}&nbsp;•&nbsp; <strong style="color:#CCFF00;">Target: {{ l.target_selesai|date:"d M Y" }}</strong>{% endif %}
       </div>
     </div>
 
@@ -402,52 +451,74 @@
       <div class="photo-gallery-preview">
         {% if l.foto %}
         <div class="photo-thumb-wrapper" onclick="openLightbox('{{ l.foto.url }}', '{{ l.judul|escapejs }}', 'Kondisi Awal (Pelapor)', '{{ l.lokasi.nama|escapejs }}, {{ l.lokasi.gedung|escapejs }}', '{% url 'detail' l.pk %}')" title="Klik untuk melihat foto lebih besar">
-          <div class="photo-badge badge-awal">📷 Kondisi Awal</div>
+          <div class="photo-badge badge-awal">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:2px;"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            Kondisi Awal
+          </div>
           <img src="{{ l.foto.url }}" alt="Foto: {{ l.judul }}" class="photo-thumb">
           <div class="photo-hover-zoom">
-            <span>🔍 Perbesar</span>
+            <span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              Perbesar
+            </span>
           </div>
         </div>
         {% endif %}
 
         {% if l.foto_perbaikan %}
         <div class="photo-thumb-wrapper" onclick="openLightbox('{{ l.foto_perbaikan.url }}', '{{ l.judul|escapejs }}', 'Hasil Perbaikan Staf', '{{ l.lokasi.nama|escapejs }}, {{ l.lokasi.gedung|escapejs }}', '{% url 'detail' l.pk %}')" title="Klik untuk melihat foto lebih besar">
-          <div class="photo-badge badge-selesai">✨ Hasil Perbaikan</div>
+          <div class="photo-badge badge-selesai">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Hasil Perbaikan
+          </div>
           <img src="{{ l.foto_perbaikan.url }}" alt="Foto Perbaikan: {{ l.judul }}" class="photo-thumb thumb-success">
           <div class="photo-hover-zoom">
-            <span>🔍 Perbesar</span>
+            <span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              Perbesar
+            </span>
           </div>
         </div>
         {% endif %}
       </div>
       {% else %}
       <div class="photo-thumb-placeholder" title="Tidak ada foto lampiran">
-        <span style="font-size:24px;">📷</span>
-        <span style="font-size:11px; font-weight:600; margin-top:2px;">Tanpa Foto</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        <span style="font-size:11px; font-weight:600; margin-top:4px;">Tanpa Foto</span>
       </div>
       {% endif %}
 
       <!-- Text Content -->
       <div style="flex:1; min-width:260px;">
         <h3 style="margin:0 0 6px; font-size:18px; line-height:1.3;">
-          <a href="{% url 'detail' l.pk %}" style="color:var(--ink); font-weight:700;">{{ l.judul }}</a>
+          <a href="{% url 'detail' l.pk %}" style="color:#FFFFFF; font-weight:700;">{{ l.judul }}</a>
         </h3>
 
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; font-size:13px; color:var(--mu);">
-          <span>📍 <strong>{{ l.lokasi.nama }}</strong> ({{ l.lokasi.gedung }})</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; font-size:13px; color:#A78BFA;">
+          <span style="display:inline-flex; align-items:center; gap:3px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <strong>{{ l.lokasi.nama }}</strong> ({{ l.lokasi.gedung }})
+          </span>
           <span>•</span>
-          <span>👤 Pelapor: <strong>{{ l.pelapor_display }}</strong></span>
+          <span style="display:inline-flex; align-items:center; gap:3px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Pelapor: <strong>{{ l.pelapor_display }}</strong>
+          </span>
         </div>
 
-        <p style="margin:0; font-size:14px; color:#334155; line-height:1.5;">
+        <p style="margin:0; font-size:14px; color:#DDD6FE; line-height:1.6;">
           {{ l.deskripsi|truncatechars:180 }}
         </p>
 
         <!-- Informasi Penanganan Petugas Jika Ada -->
         {% if l.catatan_perbaikan %}
-        <div style="margin-top:10px; padding:8px 12px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; font-size:13px; color:#14532D;">
-          <strong>🛠️ Update Petugas:</strong> {{ l.catatan_perbaikan }}
-          {% if l.petugas %}<span style="color:#15803D;"> (oleh {{ l.petugas.username }})</span>{% endif %}
+        <div style="margin-top:10px; padding:10px 14px; background:rgba(16, 185, 129, 0.15); border:1px solid rgba(16, 185, 129, 0.35); border-radius:10px; font-size:13px; color:#A7F3D0; backdrop-filter:blur(8px);">
+          <strong style="display:inline-flex; align-items:center; gap:4px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Update Petugas:
+          </strong> 
+          {{ l.catatan_perbaikan }}
+          {% if l.petugas %}<span style="color:#6EE7B7;"> (oleh {{ l.petugas.username }})</span>{% endif %}
         </div>
         {% endif %}
       </div>
@@ -455,7 +526,7 @@
     </div>
 
     <!-- Bottom Action Bar (Dukung, Diskusi, Detail) -->
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--ln);">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.12);">
       
       <!-- Quick Support / Upvote Button -->
       <div style="display:flex; gap:10px; align-items:center;">
@@ -463,28 +534,31 @@
         <form method="post" action="{% url 'dukung' l.pk %}" style="margin:0;">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <button type="submit" class="btn sm {% if l.id in supported_ids %}btn-primary{% else %}alt{% endif %}" style="height:36px; padding:0 14px; border-radius:8px;">
-            <span>👍</span> {% if l.id in supported_ids %}Didukung{% else %}Saya juga mengalami{% endif %}
-            <span style="background:{% if l.id in supported_ids %}rgba(255,255,255,0.25){% else %}#E2E8F0{% endif %}; color:{% if l.id in supported_ids %}#fff{% else %}#1E293B{% endif %}; padding:2px 7px; border-radius:999px; font-size:11px; margin-left:4px;">
+          <button type="submit" class="btn sm {% if l.id in supported_ids %}btn-lime{% else %}alt{% endif %}" style="height:36px; padding:0 14px; border-radius:10px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3"/><path d="M10 22h7.5"/></svg>
+            {% if l.id in supported_ids %}Didukung{% else %}Saya juga mengalami{% endif %}
+            <span style="background:{% if l.id in supported_ids %}rgba(11,8,24,0.3){% else %}rgba(255,255,255,0.15){% endif %}; color:{% if l.id in supported_ids %}#0B0818{% else %}#FFFFFF{% endif %}; padding:2px 7px; border-radius:999px; font-size:11px; margin-left:4px; font-weight:800;">
               {{ l.pendukung.count }}
             </span>
           </button>
         </form>
         {% else %}
-        <a href="{% url 'login' %}" class="btn sm alt" style="height:36px; padding:0 14px; border-radius:8px;" title="Masuk untuk mendukung laporan">
-          <span>👍</span> Dukung ({{ l.pendukung.count }})
+        <a href="{% url 'login' %}" class="btn sm alt" style="height:36px; padding:0 14px; border-radius:10px;" title="Masuk untuk mendukung laporan">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3"/><path d="M10 22h7.5"/></svg>
+          Dukung ({{ l.pendukung.count }})
         </a>
         {% endif %}
 
         <!-- Comments Counter Link -->
-        <a href="{% url 'detail' l.pk %}#komentar" class="btn sm alt" style="height:36px; padding:0 12px; border-radius:8px;">
-          <span>💬</span> {{ l.komentar.count }} Tanggapan
+        <a href="{% url 'detail' l.pk %}#komentar" class="btn sm alt" style="height:36px; padding:0 12px; border-radius:10px; color:#DDD6FE;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          {{ l.komentar.count }} Tanggapan
         </a>
       </div>
 
       <!-- Detail Link -->
       <div>
-        <a href="{% url 'detail' l.pk %}" class="btn sm alt" style="height:36px; padding:0 16px; border-radius:8px; font-weight:600;">
+        <a href="{% url 'detail' l.pk %}" class="btn sm alt" style="height:36px; padding:0 16px; border-radius:10px; font-weight:600; border-color:rgba(168, 85, 247, 0.4); color:#DDD6FE;">
           Lihat Perkembangan →
         </a>
       </div>
@@ -494,8 +568,10 @@
   </div>
   {% empty %}
   <div class="card" style="text-align:center; padding:48px 24px;">
-    <div style="font-size:42px; margin-bottom:12px;">🌱</div>
-    <h3 style="margin:0 0 8px; font-size:18px;">Belum ada laporan di bagian ini</h3>
+    <div style="margin-bottom:14px; color:#A78BFA;">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+    </div>
+    <h3 style="margin:0 0 8px; font-size:18px; color:#FFFFFF;">Belum ada laporan di bagian ini</h3>
     <p class="mu" style="margin:0 0 20px; font-size:14px;">Tidak ditemukan laporan yang sesuai dengan tab, kategori, atau kata kunci pencarian Anda.</p>
     <div style="display:flex; gap:10px; justify-content:center;">
       <a href="{% url 'buat' %}" class="btn sm">Buat Laporan Baru</a>
@@ -505,14 +581,17 @@
   {% endfor %}
 </div>
 
-<!-- LIGHTBOX MODAL UNTUK PREVIEW FOTO PENUH -->
+<!-- LIGHTBOX MODAL UNTUK PREVIEW FOTO PENUH (GLASSMORPHISM) -->
 <div id="photoLightbox" class="lightbox-modal" onclick="closeLightbox(event)">
   <div class="lightbox-content" onclick="event.stopPropagation()">
     <div class="lightbox-header">
       <div>
         <span id="lightboxBadge" class="lightbox-badge">Kondisi Awal</span>
-        <h3 id="lightboxTitle" style="margin:4px 0 0; font-size:16px; color:#0F172A; font-weight:700;">Judul Laporan</h3>
-        <p id="lightboxLocation" style="margin:3px 0 0; font-size:13px; color:#64748B;">📍 Lokasi</p>
+        <h3 id="lightboxTitle" style="margin:4px 0 0; font-size:16px; color:#FFFFFF; font-weight:700;">Judul Laporan</h3>
+        <p id="lightboxLocation" style="margin:3px 0 0; font-size:13px; color:#A78BFA; display:flex; align-items:center; gap:4px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="lightboxLocationText">Lokasi</span>
+        </p>
       </div>
       <button type="button" class="lightbox-close" onclick="closeLightbox()" title="Tutup (Esc)">✕</button>
     </div>
@@ -520,8 +599,8 @@
       <img id="lightboxImg" src="" alt="Preview Foto Dokumentasi Fasilitas">
     </div>
     <div class="lightbox-footer">
-      <span style="font-size:12px; color:#64748B;">💡 Klik di luar jendela atau tekan tombol <kbd style="background:#E2E8F0; padding:2px 6px; border-radius:4px; font-size:11px;">Esc</kbd> untuk menutup</span>
-      <a id="lightboxDetailBtn" href="#" class="btn sm" style="text-decoration:none; padding:8px 16px; font-weight:600;">Lihat Detail Laporan Lengkap →</a>
+      <span style="font-size:12px; color:#A78BFA;">Tip: Klik di luar jendela atau tekan tombol <kbd style="background:rgba(255,255,255,0.15); color:#FFFFFF; padding:2px 6px; border-radius:4px; font-size:11px;">Esc</kbd> untuk menutup</span>
+      <a id="lightboxDetailBtn" href="#" class="btn btn-lime sm" style="text-decoration:none; padding:8px 18px; font-weight:800;">Lihat Detail Laporan Lengkap →</a>
     </div>
   </div>
 </div>
@@ -535,8 +614,25 @@ function openLightbox(imgSrc, title, badge, location, detailUrl) {
   img.src = imgSrc;
   document.getElementById('lightboxTitle').innerText = title;
   badgeElem.innerText = badge;
-  document.getElementById('lightboxLocation').innerText = '📍 ' + location;
+  const locElem = document.getElementById('lightboxLocationText');
+  if (locElem) {
+    locElem.innerText = location;
+  }
   document.getElementById('lightboxDetailBtn').href = detailUrl;
+
+  if (badge.includes('Perbaikan')) {
+    badgeElem.style.background = '#ECFDF5';
+    badgeElem.style.color = '#065F46';
+    badgeElem.style.border = '1px solid #A7F3D0';
+  } else {
+    badgeElem.style.background = '#FEE2E2';
+    badgeElem.style.color = '#991B1B';
+    badgeElem.style.border = '1px solid #FECACA';
+  }
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
   if (badge.includes('Perbaikan')) {
     badgeElem.style.background = '#ECFDF5';

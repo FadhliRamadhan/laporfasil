@@ -1,8 +1,228 @@
 {% extends "base.html" %}
-{% block title %}Daftar{% endblock %}
+{% block title %}Daftar Akun - LaporFasil{% endblock %}
+
 {% block content %}
-<h1>Daftar</h1>
-<form method="post" class="card" style="max-width:420px">{% csrf_token %}{{ form.as_p }}
-<button>Buat akun</button>
-<p class="mu" style="margin-top:14px">Sudah punya akun? <a href="{% url 'login' %}">Masuk</a></p></form>
+<style>
+/* AUTH PAGES STYLING (MATCHING DESIGN SPEC) */
+.auth-page-container {
+  min-height: calc(100vh - 220px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.auth-badge-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #60A5FA;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 430px;
+  background: #111622;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 26px;
+  padding: 40px 34px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 50px rgba(96, 165, 250, 0.08);
+  position: relative;
+}
+
+.auth-heading {
+  font-size: 26px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.auth-subheading {
+  font-size: 14px;
+  color: #94A3B8;
+  margin: 0 0 26px;
+  line-height: 1.5;
+}
+
+.auth-field {
+  background: #0B0E17;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  transition: all 0.2s ease;
+}
+
+.auth-field:focus-within {
+  border-color: #60A5FA;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+  background: #0D121F;
+}
+
+.auth-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.auth-input {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: #F8FAFC !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  width: 100% !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-family: inherit;
+}
+
+.auth-input::placeholder {
+  color: #475569;
+}
+
+.btn-auth-primary {
+  width: 100%;
+  background: #60A5FA;
+  color: #0B1120;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 18px rgba(96, 165, 250, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.btn-auth-primary:hover {
+  background: #38BDF8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(96, 165, 250, 0.55);
+}
+
+.btn-auth-secondary {
+  width: 100%;
+  background: #161D2C;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #F8FAFC;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin-top: 10px;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.btn-auth-secondary:hover {
+  background: #1F293D;
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+.auth-skip {
+  color: #64748B;
+  font-size: 13px;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  margin-top: 22px;
+  transition: color 0.15s ease;
+}
+
+.auth-skip:hover {
+  color: #94A3B8;
+}
+
+.auth-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #FCA5A5;
+  font-size: 13px;
+}
+
+.auth-hints {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+</style>
+
+<div class="auth-page-container">
+  <div style="text-align:center; width:100%; max-width:430px;">
+    
+    <div class="auth-badge-top">
+      <span>LAPORFASIL</span> • <span>SISTEM KAMPUS</span>
+    </div>
+
+    <div class="auth-box" style="text-align:left;">
+      <h1 class="auth-heading">Create your account</h1>
+      <p class="auth-subheading">Daftar untuk menyampaikan aspirasi & memantau fasilitas kampus</p>
+
+      {% if form.errors %}
+      <div class="auth-error">
+        {% for field, errors in form.errors.items %}
+          {% for err in errors %}
+            <div>• {{ err }}</div>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'daftar' %}">
+        {% csrf_token %}
+
+        <div class="auth-field">
+          <label for="id_username" class="auth-label">Username</label>
+          <input type="text" name="username" id="id_username" class="auth-input" value="{{ form.username.value|default:'' }}" placeholder="Masukkan username pilihan Anda" autofocus required autocomplete="username">
+        </div>
+
+        <div class="auth-field">
+          <label for="id_password1" class="auth-label">Password</label>
+          <input type="password" name="password1" id="id_password1" class="auth-input" placeholder="Minimal 8 karakter" required autocomplete="new-password">
+        </div>
+
+        <div class="auth-field">
+          <label for="id_password2" class="auth-label">Konfirmasi Password</label>
+          <input type="password" name="password2" id="id_password2" class="auth-input" placeholder="Ulangi password di atas" required autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="btn-auth-primary">Create account</button>
+        <a href="{% url 'login' %}" class="btn-auth-secondary">Log in</a>
+      </form>
+
+      <a href="{% url 'beranda' %}" class="auth-skip">Skip for now</a>
+    </div>
+
+  </div>
+</div>
 {% endblock %}
