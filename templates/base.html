@@ -9,27 +9,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* DARK GLASSMORPHISM PALETTE (Sesuai Referensi Gambar) */
-  --primary: #A855F7;
-  --primary-hover: #9333EA;
-  --primary-light: rgba(168, 85, 247, 0.2);
-  --primary-border: rgba(168, 85, 247, 0.4);
+  /* DARK BLUE GLASSMORPHISM PALETTE (Sesuai Referensi Gambar ale.uiux) */
+  --primary: #38BDF8;
+  --primary-hover: #0EA5E9;
+  --primary-light: rgba(56, 189, 248, 0.16);
+  --primary-border: rgba(56, 189, 248, 0.35);
 
-  --accent-lime: #CCFF00;
-  --accent-lime-hover: #B8E600;
-  --accent-lime-glow: rgba(204, 255, 0, 0.4);
+  --accent-cyan: #38BDF8;
+  --accent-blue: #60A5FA;
+  --accent-glow: rgba(56, 189, 248, 0.45);
 
-  --bg: #0B0818;
-  --surface: rgba(28, 20, 54, 0.65);
-  --surface-hover: rgba(38, 28, 70, 0.78);
-  --surface-glass: rgba(255, 255, 255, 0.06);
+  --bg: #080C16;
+  --surface: rgba(14, 22, 41, 0.72);
+  --surface-hover: rgba(20, 31, 56, 0.85);
+  --surface-glass: rgba(255, 255, 255, 0.04);
 
   --ink: #FFFFFF;
-  --ink-secondary: #DDD6FE;
-  --mu: #A78BFA;
-  --ln: rgba(255, 255, 255, 0.12);
-  --ln-dark: rgba(255, 255, 255, 0.22);
-  --ln-glow: rgba(168, 85, 247, 0.4);
+  --ink-secondary: #BAE6FD;
+  --mu: #94A3B8;
+  --ln: rgba(255, 255, 255, 0.1);
+  --ln-dark: rgba(255, 255, 255, 0.2);
+  --ln-glow: rgba(56, 189, 248, 0.4);
 
   --success: #10B981;
   --success-light: rgba(16, 185, 129, 0.2);
@@ -42,41 +42,41 @@
   --danger-border: rgba(239, 68, 68, 0.35);
 
   --glass-blur: blur(20px) saturate(180%);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+  --glass-border: 1px solid rgba(56, 189, 248, 0.14);
+  --glass-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
 
   --radius-sm: 8px;
   --radius: 14px;
   --radius-lg: 20px;
   --radius-full: 9999px;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.6);
 }
 
 /* LIGHT FROSTED THEME (JIKA DITOGGLE KE LIGHT) */
 [data-theme="light"] {
-  --primary: #7C3AED;
-  --primary-hover: #6D28D9;
-  --primary-light: rgba(124, 58, 237, 0.12);
-  --primary-border: #DDD6FE;
-  --accent-lime: #84CC16;
-  --bg: #F5F3FF;
-  --surface: rgba(255, 255, 255, 0.85);
-  --surface-hover: rgba(255, 255, 255, 0.95);
-  --ink: #1E1B4B;
-  --ink-secondary: #4338CA;
-  --mu: #6B7280;
-  --ln: #E5E7EB;
-  --ln-dark: #D1D5DB;
-  --glass-border: 1px solid rgba(124, 58, 237, 0.15);
-  --glass-shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
+  --primary: #0284C7;
+  --primary-hover: #0369A1;
+  --primary-light: rgba(2, 132, 199, 0.12);
+  --primary-border: #BAE6FD;
+  --accent-cyan: #0284C7;
+  --bg: #F0F9FF;
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-hover: rgba(255, 255, 255, 0.98);
+  --ink: #0C4A6E;
+  --ink-secondary: #0369A1;
+  --mu: #64748B;
+  --ln: #E2E8F0;
+  --ln-dark: #CBD5E1;
+  --glass-border: 1px solid rgba(2, 132, 199, 0.16);
+  --glass-shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
 }
 
 /* Override hardcoded light colors in base.html */
 [data-theme="dark"] header {
-  background: rgba(15, 23, 42, 0.9);
+  background: transparent;
 }
 [data-theme="dark"] .brand-text {
   color: var(--ink);
@@ -95,25 +95,27 @@
 [data-theme="dark"] .chip:hover,
 [data-theme="dark"] a.btn.alt:hover,
 [data-theme="dark"] button.alt:hover {
-  background: #334155;
+  background: #1E293B;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
   font: 400 15px/1.6 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #0B0818;
+  background-color: #080C16;
   background-image: 
-    radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.22) 0%, transparent 45%),
-    radial-gradient(circle at 10% 40%, rgba(99, 102, 241, 0.18) 0%, transparent 50%),
-    radial-gradient(circle at 75% 80%, rgba(204, 255, 0, 0.08) 0%, transparent 38%),
-    radial-gradient(circle at 25% 90%, rgba(124, 58, 237, 0.16) 0%, transparent 45%);
+    radial-gradient(circle at 50% -5%, rgba(56, 189, 248, 0.22) 0%, transparent 55%),
+    radial-gradient(circle at 85% 20%, rgba(14, 165, 233, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 10% 45%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 75% 85%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+    radial-gradient(rgba(255, 255, 255, 0.05) 1.2px, transparent 1.2px);
+  background-size: auto, auto, auto, auto, 24px 24px;
   background-attachment: fixed;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
-a { color: #C4B5FD; text-decoration: none; transition: color 0.15s ease; }
-a:hover { color: #CCFF00; }
+a { color: #38BDF8; text-decoration: none; transition: color 0.15s ease; }
+a:hover { color: #7DD3FC; }
 
 /* HEADER & NAVBAR (FLOATING GLASSY CAPSULE - SETTIGATION STYLE) */
 header {
@@ -130,23 +132,23 @@ nav {
   max-width: 1140px;
   margin: 0 auto;
   padding: 8px 14px 8px 18px;
-  background: rgba(18, 14, 38, 0.72);
+  background: rgba(13, 20, 36, 0.78);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.18);
   border-radius: 9999px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.6), 0 0 24px rgba(168, 85, 247, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65), 0 0 24px rgba(56, 189, 248, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.16);
   transition: all 0.25s ease;
 }
 
 [data-theme="light"] nav {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(124, 58, 237, 0.16);
-  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(2, 132, 199, 0.18);
+  box-shadow: 0 12px 32px rgba(2, 132, 199, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
 }
 
 .brand-group {
@@ -159,14 +161,14 @@ nav {
 .brand-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 50%, #60A5FA 100%);
+  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 50%, #38BDF8 100%);
   color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  box-shadow: 0 0 16px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
   transition: transform 0.2s ease;
 }
 .brand-group:hover .brand-icon {
@@ -181,9 +183,9 @@ nav {
 .brand-badge {
   font-size: 10px;
   font-weight: 800;
-  background: rgba(96, 165, 250, 0.15);
-  color: #60A5FA;
-  border: 1px solid rgba(96, 165, 250, 0.35);
+  background: rgba(56, 189, 248, 0.15);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
   padding: 2px 7px;
   border-radius: 9999px;
   text-transform: uppercase;
@@ -201,8 +203,8 @@ nav {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 [data-theme="light"] .nav-center-menu {
-  background: rgba(124, 58, 237, 0.05);
-  border: 1px solid rgba(124, 58, 237, 0.12);
+  background: rgba(2, 132, 199, 0.06);
+  border: 1px solid rgba(2, 132, 199, 0.12);
 }
 
 .nav-pill-link {
@@ -211,7 +213,7 @@ nav {
   gap: 6px;
   font-size: 13.5px;
   font-weight: 600;
-  color: #DDD6FE;
+  color: #BAE6FD;
   padding: 7px 14px;
   border-radius: 9999px;
   text-decoration: none;
@@ -219,15 +221,15 @@ nav {
 }
 .nav-pill-link:hover, .nav-pill-link.active {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(56, 189, 248, 0.18);
   transform: translateY(-1px);
 }
 [data-theme="light"] .nav-pill-link {
-  color: #4B5563;
+  color: #0369A1;
 }
 [data-theme="light"] .nav-pill-link:hover {
-  color: #1E1B4B;
-  background: rgba(124, 58, 237, 0.12);
+  color: #0C4A6E;
+  background: rgba(2, 132, 199, 0.12);
 }
 
 /* Right Actions Group */
@@ -243,7 +245,7 @@ nav {
   align-items: center;
   font-size: 13.5px;
   font-weight: 600;
-  color: #DDD6FE;
+  color: #BAE6FD;
   padding: 8px 14px;
   border-radius: 9999px;
   transition: all 0.15s ease;
@@ -251,14 +253,14 @@ nav {
 }
 .btn-pill-ghost:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(56, 189, 248, 0.12);
 }
 [data-theme="light"] .btn-pill-ghost {
-  color: #4B5563;
+  color: #0369A1;
 }
 [data-theme="light"] .btn-pill-ghost:hover {
-  color: #1E1B4B;
-  background: rgba(124, 58, 237, 0.08);
+  color: #0C4A6E;
+  background: rgba(2, 132, 199, 0.08);
 }
 
 .btn-pill-outline {
@@ -275,8 +277,8 @@ nav {
   text-decoration: none;
 }
 .btn-pill-outline:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
   color: #FFFFFF;
   transform: translateY(-1px);
 }
@@ -287,20 +289,20 @@ nav {
   gap: 6px;
   font-size: 13.5px;
   font-weight: 700;
-  color: #0B1120 !important;
-  background: #60A5FA !important;
+  color: #080C16 !important;
+  background: #38BDF8 !important;
   border: none !important;
   padding: 8px 18px;
   border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(96, 165, 250, 0.4);
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.45);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   cursor: pointer;
 }
 .btn-pill-cta:hover {
-  background: #38BDF8 !important;
+  background: #7DD3FC !important;
   transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 6px 22px rgba(96, 165, 250, 0.6);
+  box-shadow: 0 6px 24px rgba(56, 189, 248, 0.65);
 }
 
 .user-profile-capsule {
@@ -313,8 +315,8 @@ nav {
   border-radius: 9999px;
 }
 [data-theme="light"] .user-profile-capsule {
-  background: rgba(124, 58, 237, 0.06);
-  border-color: rgba(124, 58, 237, 0.18);
+  background: rgba(2, 132, 199, 0.06);
+  border-color: rgba(2, 132, 199, 0.18);
 }
 
 .theme-toggle-btn {
@@ -326,21 +328,21 @@ nav {
   justify-content: center;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #DDD6FE;
+  color: #BAE6FD;
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 0;
 }
 .theme-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(56, 189, 248, 0.15);
   color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(56, 189, 248, 0.4);
   transform: translateY(-1px);
 }
 [data-theme="light"] .theme-toggle-btn {
-  background: rgba(124, 58, 237, 0.08);
-  border-color: rgba(124, 58, 237, 0.2);
-  color: #4B5563;
+  background: rgba(2, 132, 199, 0.08);
+  border-color: rgba(2, 132, 199, 0.2);
+  color: #0369A1;
 }
 
 /* BUTTONS */
@@ -353,24 +355,24 @@ nav {
   padding: 0 18px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 12px;
-  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-  color: #fff;
-  font: 600 14px 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 50%, #38BDF8 100%);
+  color: #080C16;
+  font: 700 14px 'Inter', sans-serif;
   text-decoration: none;
   cursor: pointer;
   line-height: 1;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);
 }
 .btn:hover, button:hover {
-  background: linear-gradient(135deg, #9333EA 0%, #6D28D9 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #0369A1 0%, #0284C7 50%, #0EA5E9 100%);
+  color: #080C16;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.55);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5);
   border-color: rgba(255, 255, 255, 0.3);
 }
 a.btn.alt, button.alt {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: #F8FAFC;
@@ -378,23 +380,23 @@ a.btn.alt, button.alt {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 a.btn.alt:hover, button.alt:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(56, 189, 248, 0.14);
+  border-color: rgba(56, 189, 248, 0.3);
   color: #FFFFFF;
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 .btn-lime {
-  background: #CCFF00 !important;
-  color: #0B0818 !important;
+  background: #38BDF8 !important;
+  color: #080C16 !important;
   font-weight: 800 !important;
   border: none !important;
-  box-shadow: 0 0 20px rgba(204, 255, 0, 0.45) !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.45) !important;
 }
 .btn-lime:hover {
-  background: #B8E600 !important;
+  background: #7DD3FC !important;
   transform: translateY(-2px) scale(1.02) !important;
-  box-shadow: 0 0 28px rgba(204, 255, 0, 0.6) !important;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.65) !important;
 }
 .btn.sm, button.sm {
   min-height: 34px;
@@ -410,7 +412,7 @@ button.link {
   background: none;
   border: none;
   box-shadow: none;
-  color: #A78BFA;
+  color: #38BDF8;
   padding: 4px 8px;
   min-height: 0;
   font-size: 13px;
@@ -450,9 +452,9 @@ h3 { font-size: 16px; font-weight: 600; margin: 12px 0 6px; color: #FFFFFF; }
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-/* HERO BANNER (COSMIC GLASS) */
+/* HERO BANNER (BLUE GLASS) */
 .hero {
-  background: linear-gradient(135deg, rgba(38, 24, 75, 0.8) 0%, rgba(67, 30, 120, 0.7) 50%, rgba(20, 14, 40, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(16, 32, 64, 0.85) 0%, rgba(14, 23, 44, 0.85) 50%, rgba(8, 14, 28, 0.95) 100%);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   color: #fff;
@@ -460,12 +462,12 @@ h3 { font-size: 16px; font-weight: 600; margin: 12px 0 6px; color: #FFFFFF; }
   padding: 28px 32px;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 35px rgba(56, 189, 248, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.2);
   margin-bottom: 24px;
 }
 .hero h1 { margin: 0 0 8px; font-size: 28px; color: #fff; }
-.hero p { margin: 0; color: #DDD6FE; font-size: 15px; max-width: 720px; line-height: 1.6; }
+.hero p { margin: 0; color: #BAE6FD; font-size: 15px; max-width: 720px; line-height: 1.6; }
 
 /* STATS GRID */
 .grid {
@@ -475,30 +477,30 @@ h3 { font-size: 16px; font-weight: 600; margin: 12px 0 6px; color: #FFFFFF; }
   margin: 18px 0;
 }
 .stat-card {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(14, 22, 41, 0.6);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.14);
   border-radius: var(--radius);
   padding: 16px 18px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   transition: all 0.15s ease;
 }
-.stat-card:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.25); }
+.stat-card:hover { transform: translateY(-2px); border-color: rgba(56, 189, 248, 0.35); }
 .num { font-size: 28px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.03em; color: #FFFFFF; }
-.mu { color: #A78BFA; font-size: 13px; margin: 0; }
+.mu { color: #94A3B8; font-size: 13px; margin: 0; }
 
 /* TABS & CHIPS */
 .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
 .chip {
   padding: 8px 16px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
-  color: #DDD6FE;
+  color: #BAE6FD;
   font-size: 13px;
   font-weight: 600;
   display: inline-flex;
@@ -507,16 +509,16 @@ h3 { font-size: 16px; font-weight: 600; margin: 12px 0 6px; color: #FFFFFF; }
   transition: all 0.2s ease;
 }
 .chip:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(56, 189, 248, 0.14);
   color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(56, 189, 248, 0.3);
   transform: translateY(-1px);
 }
 .chip.on {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.35) 0%, rgba(124, 58, 237, 0.45) 100%);
-  border-color: #CCFF00;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.28) 0%, rgba(14, 165, 233, 0.38) 100%);
+  border-color: #38BDF8;
   color: #FFFFFF;
-  box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
 }
 
 /* BADGES & PILLS */
@@ -557,7 +559,7 @@ input, select, textarea {
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   font: inherit;
-  background: rgba(18, 13, 36, 0.75);
+  background: rgba(14, 22, 41, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: #FFFFFF;
@@ -565,18 +567,18 @@ input, select, textarea {
 }
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: #A855F7;
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.35);
-  background: rgba(26, 18, 50, 0.9);
+  border-color: #38BDF8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35);
+  background: rgba(14, 25, 48, 0.95);
 }
 select option {
-  background: #140E2A;
+  background: #0B1222;
   color: #FFFFFF;
 }
 input[type="checkbox"] { width: auto; min-height: auto; margin-right: 8px; vertical-align: middle; cursor: pointer; }
 form p { margin: 0 0 16px; }
 form label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #FFFFFF; }
-.helptext { display: block; font-size: 12px; color: #A78BFA; margin-top: 5px; }
+.helptext { display: block; font-size: 12px; color: #BAE6FD; margin-top: 5px; }
 
 /* ALERTS & MESSAGES */
 .msg {
@@ -606,18 +608,18 @@ form label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6
 
 /* PROGRESS BAR */
 .bar { flex: 1; height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 5px; overflow: hidden; }
-.bar i { display: block; height: 10px; background: #CCFF00; border-radius: 5px; box-shadow: 0 0 12px rgba(204, 255, 0, 0.5); }
+.bar i { display: block; height: 10px; background: linear-gradient(90deg, #0284C7, #38BDF8); border-radius: 5px; box-shadow: 0 0 12px rgba(56, 189, 248, 0.5); }
 
 /* FOOTER */
 footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(11, 8, 24, 0.85);
+  border-top: 1px solid rgba(56, 189, 248, 0.12);
+  background: rgba(8, 12, 22, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   padding: 28px 20px;
   margin-top: 48px;
   text-align: center;
-  color: #A78BFA;
+  color: #94A3B8;
   font-size: 13px;
 }
 
@@ -653,15 +655,15 @@ footer {
     left: 0;
     right: 0;
     height: 64px;
-    background: rgba(11, 8, 24, 0.94);
+    background: rgba(8, 12, 22, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(56, 189, 248, 0.18);
     z-index: 9999;
     justify-content: space-around;
     align-items: center;
     padding: 0 6px;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
   }
   body {
     padding-bottom: 76px;
@@ -673,7 +675,7 @@ footer {
     justify-content: center;
     gap: 3px;
     text-decoration: none;
-    color: #A78BFA;
+    color: #94A3B8;
     font-size: 11px;
     font-weight: 600;
     padding: 6px 8px;
@@ -681,25 +683,37 @@ footer {
     transition: all 0.15s ease;
     flex: 1;
     text-align: center;
+    position: relative;
   }
   .mobile-nav-item:hover, .mobile-nav-item.active {
-    color: #CCFF00;
+    color: #38BDF8;
   }
   .mobile-nav-item.active svg {
-    stroke: #CCFF00;
-    filter: drop-shadow(0 0 6px rgba(204, 255, 0, 0.5));
+    stroke: #38BDF8;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5));
+  }
+  .mobile-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    background: #38BDF8;
+    border-radius: 3px;
+    box-shadow: 0 0 10px #38BDF8;
   }
   .mobile-nav-create {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #60A5FA;
-    color: #0B1120;
+    background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%);
+    color: #080C16;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    box-shadow: 0 0 18px rgba(96, 165, 250, 0.6);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.65);
     transform: translateY(-12px);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     flex-shrink: 0;
@@ -707,7 +721,7 @@ footer {
   }
   .mobile-nav-create:hover {
     transform: translateY(-14px) scale(1.05);
-    box-shadow: 0 0 26px rgba(96, 165, 250, 0.85);
+    box-shadow: 0 0 28px rgba(56, 189, 248, 0.9);
   }
 }
 </style>
@@ -728,21 +742,29 @@ footer {
 
     <!-- TENGAH: CENTER NAVIGATION PILLS (SETTIGATION STYLE) -->
     <div class="nav-center-menu">
-      <a class="nav-pill-link" href="{% url 'beranda' %}">
+      <a class="nav-pill-link {% if request.resolver_match.url_name == 'beranda' and mode != 'saya' and mode != 'didukung' and mode != 'mendesak' and mode != 'selesai' and not request.GET.tab %}active{% endif %}" href="{% url 'beranda' %}">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>Beranda</span>
       </a>
       {% if user.is_authenticated %}
-        <a class="nav-pill-link" href="{% url 'beranda' %}?tab=saya">
+        <a class="nav-pill-link {% if request.resolver_match.url_name == 'laporan_saya' or mode == 'saya' or request.GET.tab == 'saya' %}active{% endif %}" href="{% url 'laporan_saya' %}">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
           <span>Laporan Saya</span>
         </a>
+        <a class="nav-pill-link {% if request.resolver_match.url_name == 'mendesak' or mode == 'mendesak' or request.GET.tab == 'mendesak' %}active{% endif %}" href="{% url 'mendesak' %}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          <span>Mendesak</span>
+        </a>
+        <a class="nav-pill-link {% if request.resolver_match.url_name == 'selesai' or mode == 'selesai' or request.GET.tab == 'selesai' %}active{% endif %}" href="{% url 'selesai' %}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Selesai</span>
+        </a>
         {% if user.is_staff %}
-          <a class="nav-pill-link" href="{% url 'dashboard' %}">
+          <a class="nav-pill-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             <span>Dashboard</span>
           </a>
-          <a class="nav-pill-link" href="{% url 'qr_daftar' %}">
+          <a class="nav-pill-link {% if request.resolver_match.url_name == 'qr_daftar' %}active{% endif %}" href="{% url 'qr_daftar' %}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             <span>QR Lokasi</span>
           </a>
@@ -758,11 +780,11 @@ footer {
           <span>Lapor Isu</span>
         </a>
         <div class="user-profile-capsule">
-          <span style="font-size:13px; font-weight:600; color:#FFFFFF; display:inline-flex; align-items:center; gap:5px;">
+          <a href="{% url 'profil' %}" style="text-decoration:none; font-size:13px; font-weight:600; color:#FFFFFF; display:inline-flex; align-items:center; gap:5px;" title="Lihat Profil & Akun">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             {{ user.username }}
             {% if user.is_staff %}<span class="badge" style="background:#059669; color:#fff; font-size:10px; padding:1px 6px;">Staf</span>{% endif %}
-          </span>
+          </a>
           <form method="post" action="{% url 'logout' %}" style="display:inline; margin:0;">
             {% csrf_token %}
             <button class="link" title="Keluar akun" style="padding:2px 6px; font-size:12px; color:#A78BFA;">Keluar</button>
@@ -810,12 +832,12 @@ footer {
 
 <!-- MOBILE BOTTOM NAVIGATION BAR -->
 <nav class="mobile-bottom-nav" aria-label="Navigasi Bawah">
-  <a href="{% url 'beranda' %}" class="mobile-nav-item {% if request.path == '/' and not request.GET.tab %}active{% endif %}">
+  <a href="{% url 'beranda' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'beranda' and mode != 'saya' and mode != 'didukung' and mode != 'mendesak' and mode != 'selesai' and not request.GET.tab %}active{% endif %}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span>Beranda</span>
   </a>
 
-  <a href="{% url 'beranda' %}?tab=saya" class="mobile-nav-item {% if request.GET.tab == 'saya' %}active{% endif %}">
+  <a href="{% if user.is_authenticated %}{% url 'laporan_saya' %}{% else %}{% url 'login' %}{% endif %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'laporan_saya' or mode == 'saya' or request.GET.tab == 'saya' %}active{% endif %}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
     <span>Laporan</span>
   </a>
@@ -824,13 +846,13 @@ footer {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </a>
 
-  <a href="{% url 'beranda' %}?tab=mendesak" class="mobile-nav-item {% if request.GET.tab == 'mendesak' %}active{% endif %}">
+  <a href="{% url 'mendesak' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'mendesak' or mode == 'mendesak' or request.GET.tab == 'mendesak' %}active{% endif %}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
     <span>Mendesak</span>
   </a>
 
   {% if user.is_authenticated %}
-  <a href="{% if user.is_staff %}{% url 'dashboard' %}{% else %}{% url 'beranda' %}?tab=saya{% endif %}" class="mobile-nav-item">
+  <a href="{% url 'profil' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'profil' %}active{% endif %}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span>{{ user.username|truncatechars:7 }}</span>
   </a>

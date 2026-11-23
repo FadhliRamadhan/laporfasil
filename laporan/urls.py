@@ -4,6 +4,11 @@ from . import views
 
 urlpatterns = [
     path("", views.beranda, name="beranda"),
+    path("laporan-saya/", views.laporan_saya, name="laporan_saya"),
+    path("didukung-saya/", views.didukung_saya, name="didukung_saya"),
+    path("mendesak/", views.mendesak, name="mendesak"),
+    path("selesai/", views.selesai, name="selesai"),
+    path("profil/", views.profil, name="profil"),
     path("lapor/", views.buat, name="buat"),
     path("laporan/<int:pk>/", views.detail, name="detail"),
     path("laporan/<int:pk>/dukung/", views.dukung, name="dukung"),

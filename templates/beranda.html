@@ -17,15 +17,15 @@
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  background: rgba(18, 12, 36, 0.85);
+  background: rgba(14, 22, 41, 0.85);
   box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .photo-thumb-wrapper:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.45), 0 0 16px rgba(168, 85, 247, 0.35);
-  border-color: rgba(204, 255, 0, 0.5);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45), 0 0 16px rgba(56, 189, 248, 0.35);
+  border-color: rgba(56, 189, 248, 0.5);
 }
 .photo-thumb {
   width: 100%;
@@ -54,7 +54,7 @@
   backdrop-filter: blur(8px);
 }
 .badge-awal {
-  background: rgba(11, 8, 24, 0.85);
+  background: rgba(8, 12, 22, 0.85);
   color: #F8FAFC;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -66,7 +66,7 @@
 .photo-hover-zoom {
   position: absolute;
   inset: 0;
-  background: rgba(11, 8, 24, 0.55);
+  background: rgba(8, 12, 22, 0.55);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
@@ -76,13 +76,13 @@
   z-index: 3;
 }
 .photo-hover-zoom span {
-  background: #CCFF00;
-  color: #0B0818;
+  background: #38BDF8;
+  color: #080C16;
   font-size: 11px;
   font-weight: 800;
   padding: 4px 10px;
   border-radius: 8px;
-  box-shadow: 0 0 12px rgba(204, 255, 0, 0.5);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
 }
 .photo-thumb-wrapper:hover .photo-hover-zoom {
   opacity: 1;
@@ -98,7 +98,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #A78BFA;
+  color: #94A3B8;
 }
 
 /* LIGHTBOX MODAL (GLASSMORPHISM STYLE) */
@@ -106,7 +106,7 @@
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(7, 5, 16, 0.92);
+  background: rgba(5, 8, 16, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
@@ -122,8 +122,8 @@
   pointer-events: auto;
 }
 .lightbox-content {
-  background: #140E2A;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #0D1527;
+  border: 1px solid rgba(56, 189, 248, 0.25);
   border-radius: 20px;
   max-width: 860px;
   width: 100%;
@@ -131,7 +131,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.65), 0 0 30px rgba(168, 85, 247, 0.2);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 35px rgba(56, 189, 248, 0.2);
   transform: scale(0.95);
   transition: transform 0.2s ease;
 }
@@ -144,7 +144,7 @@
   justify-content: space-between;
   align-items: flex-start;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: #181133;
+  background: #111C33;
 }
 .lightbox-badge {
   display: inline-block;
@@ -197,18 +197,19 @@
   justify-content: space-between;
   align-items: center;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: #181133;
+  background: #111C33;
   flex-wrap: wrap;
   gap: 10px;
 }
 </style>
-<!-- WELCOME BANNER / USER OVERVIEW -->
+<!-- WELCOME BANNER UTAMA (HANYA DITAMPILKAN DI BERANDA UTAMA) -->
+{% if show_banner %}
 <div class="hero">
   <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
     <div>
       {% if user.is_authenticated %}
-      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.18); padding:4px 14px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:12px;">
-        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#CCFF00; box-shadow:0 0 8px #CCFF00;"></span>
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(56,189,248,0.25); padding:4px 14px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:12px;">
+        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#38BDF8; box-shadow:0 0 8px #38BDF8;"></span>
         Selamat Datang, {{ user.first_name|default:user.username }}
       </div>
       <h1>Dashboard Aspirasi & Fasilitas Kampus</h1>
@@ -234,40 +235,40 @@
   </div>
 
   <!-- STATISTIK SUMMARY RIBBON -->
-  <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.15); display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px;">
+  <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.12); display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px;">
     {% if user.is_authenticated %}
-    <a href="?tab=saya" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
-      <div style="font-size:11px; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:0.04em;">Laporan Saya</div>
+    <a href="{% url 'laporan_saya' %}" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(56,189,248,0.15); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.04em;">Laporan Saya</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.total }}</div>
-      <div style="height:3px; width:42px; background:#A855F7; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #A855F7;"></div>
+      <div style="height:3px; width:42px; background:#38BDF8; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #38BDF8;"></div>
     </a>
-    <a href="?tab=saya&status=dikerjakan" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+    <a href="{% url 'laporan_saya' %}?status=dikerjakan" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(245,158,11,0.2); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
       <div style="font-size:11px; font-weight:700; color:#FDE68A; text-transform:uppercase; letter-spacing:0.04em;">Dalam Proses</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.proses }}</div>
       <div style="height:3px; width:42px; background:#F59E0B; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #F59E0B;"></div>
     </a>
-    <a href="?tab=saya&status=selesai" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+    <a href="{% url 'selesai' %}" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(16,185,129,0.2); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
       <div style="font-size:11px; font-weight:700; color:#6EE7B7; text-transform:uppercase; letter-spacing:0.04em;">Terselesaikan</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.selesai }}</div>
       <div style="height:3px; width:42px; background:#10B981; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #10B981;"></div>
     </a>
-    <a href="?tab=didukung" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
-      <div style="font-size:11px; font-weight:700; color:#CCFF00; text-transform:uppercase; letter-spacing:0.04em;">Didukung Saya</div>
+    <a href="{% url 'didukung_saya' %}" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(56,189,248,0.25); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#38BDF8; text-transform:uppercase; letter-spacing:0.04em;">Didukung Saya</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.didukung }}</div>
-      <div style="height:3px; width:42px; background:#CCFF00; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #CCFF00;"></div>
+      <div style="height:3px; width:42px; background:#38BDF8; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #38BDF8;"></div>
     </a>
     {% else %}
-    <div style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px;">
-      <div style="font-size:11px; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:0.04em;">Total Laporan</div>
+    <div style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); border:1px solid rgba(56,189,248,0.15); padding:14px 16px; border-radius:14px;">
+      <div style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.04em;">Total Laporan</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ total_kampus }}</div>
-      <div style="height:3px; width:42px; background:#A855F7; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #A855F7;"></div>
+      <div style="height:3px; width:42px; background:#38BDF8; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #38BDF8;"></div>
     </div>
-    <div style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px;">
+    <div style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); border:1px solid rgba(245,158,11,0.2); padding:14px 16px; border-radius:14px;">
       <div style="font-size:11px; font-weight:700; color:#FDE68A; text-transform:uppercase; letter-spacing:0.04em;">Sedang Dikerjakan</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ aktif }}</div>
       <div style="height:3px; width:42px; background:#F59E0B; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #F59E0B;"></div>
     </div>
-    <div style="background:rgba(255,255,255,0.06); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); padding:14px 16px; border-radius:14px;">
+    <div style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); border:1px solid rgba(16,185,129,0.2); padding:14px 16px; border-radius:14px;">
       <div style="font-size:11px; font-weight:700; color:#6EE7B7; text-transform:uppercase; letter-spacing:0.04em;">Selesai Bulan Ini</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ selesai_bulan }}</div>
       <div style="height:3px; width:42px; background:#10B981; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #10B981;"></div>
@@ -275,20 +276,21 @@
     {% endif %}
   </div>
 </div>
+{% endif %}
 
-<!-- BANNER PENGUMUMAN PEMELIHARAAN -->
-{% if pengumuman_list %}
+<!-- BANNER PENGUMUMAN PEMELIHARAAN (HANYA DITAMPILKAN DI BERANDA) -->
+{% if pengumuman_list and show_banner %}
 <div style="margin-bottom: 24px;">
   {% for p in pengumuman_list %}
-  <div class="card" style="margin-bottom:10px; border-left: 5px solid {% if p.tipe == 'darurat' %}#EF4444{% elif p.tipe == 'pemeliharaan' %}#F59E0B{% else %}#A855F7{% endif %}; background:rgba(28, 20, 56, 0.7); padding:16px 20px;">
+  <div class="card" style="margin-bottom:10px; border-left: 5px solid {% if p.tipe == 'darurat' %}#EF4444{% elif p.tipe == 'pemeliharaan' %}#F59E0B{% else %}#38BDF8{% endif %}; background:rgba(14, 22, 41, 0.75); padding:16px 20px;">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
       <div style="flex:1;">
-        <span class="badge" style="background:{% if p.tipe == 'darurat' %}rgba(239, 68, 68, 0.2); color:#FCA5A5; border:1px solid rgba(239, 68, 68, 0.35){% elif p.tipe == 'pemeliharaan' %}rgba(245, 158, 11, 0.2); color:#FDE68A; border:1px solid rgba(245, 158, 11, 0.35){% else %}rgba(168, 85, 247, 0.2); color:#DDD6FE; border:1px solid rgba(168, 85, 247, 0.35){% endif %}; margin-bottom:6px;">
+        <span class="badge" style="background:{% if p.tipe == 'darurat' %}rgba(239, 68, 68, 0.2); color:#FCA5A5; border:1px solid rgba(239, 68, 68, 0.35){% elif p.tipe == 'pemeliharaan' %}rgba(245, 158, 11, 0.2); color:#FDE68A; border:1px solid rgba(245, 158, 11, 0.35){% else %}rgba(56, 189, 248, 0.15); color:#BAE6FD; border:1px solid rgba(56, 189, 248, 0.35){% endif %}; margin-bottom:6px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
           {{ p.get_tipe_display }}
         </span>
         <h3 style="margin:4px 0 6px; font-size:16px; color:#FFFFFF;">{{ p.judul }}</h3>
-        <p style="margin:0; font-size:14px; color:#DDD6FE; line-height:1.5;">{{ p.isi }}</p>
+        <p style="margin:0; font-size:14px; color:#BAE6FD; line-height:1.5;">{{ p.isi }}</p>
       </div>
       <small class="mu" style="font-size:12px; font-weight:500;">{{ p.dibuat|date:"d M Y" }}</small>
     </div>
@@ -297,27 +299,30 @@
 </div>
 {% endif %}
 
+<!-- ANCHOR TARGET UNTUK INSTANT SCROLL KE BAGIAN DAFTAR -->
+<div id="daftar-laporan" style="scroll-margin-top: 90px;"></div>
+
 <!-- TAB NAVIGASI PENGGUNA (CLEAN ICONS) -->
-<div style="display:flex; gap:8px; border-bottom:1px solid rgba(255,255,255,0.15); overflow-x:auto; padding-bottom:4px; margin-bottom:22px;">
-  <a href="?tab=semua{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'semua' or not tab %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'semua' or not tab %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'semua' or not tab %}#FFFFFF{% else %}#A78BFA{% endif %};">
+<div style="display:flex; gap:8px; border-bottom:1px solid rgba(255,255,255,0.12); overflow-x:auto; padding-bottom:4px; margin-bottom:22px;">
+  <a href="{% url 'beranda' %}#daftar-laporan" class="nav-link {% if mode == 'semua' %}active{% endif %}" style="border-bottom:3px solid {% if mode == 'semua' %}#38BDF8{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if mode == 'semua' %}#FFFFFF{% else %}#94A3B8{% endif %};">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
     Semua Laporan
   </a>
   {% if user.is_authenticated %}
-  <a href="?tab=saya{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'saya' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'saya' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'saya' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+  <a href="{% url 'laporan_saya' %}#daftar-laporan" class="nav-link {% if mode == 'saya' %}active{% endif %}" style="border-bottom:3px solid {% if mode == 'saya' %}#38BDF8{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if mode == 'saya' %}#FFFFFF{% else %}#94A3B8{% endif %};">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     Laporan Saya ({{ user_stats.total }})
   </a>
-  <a href="?tab=didukung{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'didukung' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'didukung' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'didukung' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+  <a href="{% url 'didukung_saya' %}#daftar-laporan" class="nav-link {% if mode == 'didukung' %}active{% endif %}" style="border-bottom:3px solid {% if mode == 'didukung' %}#38BDF8{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if mode == 'didukung' %}#FFFFFF{% else %}#94A3B8{% endif %};">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3"/><path d="M10 22h7.5"/></svg>
     Didukung Saya ({{ user_stats.didukung }})
   </a>
   {% endif %}
-  <a href="?tab=mendesak{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'mendesak' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'mendesak' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'mendesak' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+  <a href="{% url 'mendesak' %}#daftar-laporan" class="nav-link {% if mode == 'mendesak' %}active{% endif %}" style="border-bottom:3px solid {% if mode == 'mendesak' %}#38BDF8{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if mode == 'mendesak' %}#FFFFFF{% else %}#94A3B8{% endif %};">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
     Prioritas Mendesak
   </a>
-  <a href="?tab=selesai{% if kategori %}&kategori={{ kategori }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="nav-link {% if tab == 'selesai' %}active{% endif %}" style="border-bottom:3px solid {% if tab == 'selesai' %}#CCFF00{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if tab == 'selesai' %}#FFFFFF{% else %}#A78BFA{% endif %};">
+  <a href="{% url 'selesai' %}#daftar-laporan" class="nav-link {% if mode == 'selesai' %}active{% endif %}" style="border-bottom:3px solid {% if mode == 'selesai' %}#38BDF8{% else %}transparent{% endif %}; border-radius:10px 10px 0 0; font-size:14px; font-weight:700; color:{% if mode == 'selesai' %}#FFFFFF{% else %}#94A3B8{% endif %};">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     Berhasil Ditangani
   </a>
@@ -325,8 +330,8 @@
 
 <!-- TOOLBAR PENCARIAN & FILTER -->
 <div class="card" style="padding:16px 20px; margin-bottom:24px;">
-  <form method="get" action="{% url 'beranda' %}" style="margin:0;">
-    <input type="hidden" name="tab" value="{{ tab }}">
+  <form method="get" action="{{ request.path }}" style="margin:0;">
+    {% if tab and tab != mode %}<input type="hidden" name="tab" value="{{ tab }}">{% endif %}
 
     <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
       <div style="flex:2; min-width:240px; position:relative;">
@@ -354,19 +359,19 @@
       <div style="display:flex; gap:8px;">
         <button type="submit" class="btn sm" style="height:42px; padding:0 18px;">Cari</button>
         {% if q or status_filter or kategori or sort != "prioritas" %}
-        <a href="{% url 'beranda' %}?tab={{ tab }}" class="btn sm alt" style="height:42px; line-height:40px; padding:0 14px;">Reset</a>
+        <a href="{{ request.path }}#daftar-laporan" class="btn sm alt" style="height:42px; line-height:40px; padding:0 14px;">Reset</a>
         {% endif %}
       </div>
     </div>
 
     <!-- CHIPS KATEGORI (CLEAN MODERN SVGS) -->
     <div class="chips" style="margin-top:14px; margin-bottom:0;">
-      <a class="chip {% if not kategori %}on{% endif %}" href="?tab={{ tab }}{% if q %}&q={{ q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+      <a class="chip {% if not kategori %}on{% endif %}" href="?{% if status_filter %}status={{ status_filter }}&{% endif %}{% if sort != 'prioritas' %}sort={{ sort }}&{% endif %}{% if q %}q={{ q }}&{% endif %}#daftar-laporan">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
         Semua Isu
       </a>
       {% for kode, nama in kategori_list %}
-      <a class="chip {% if kode == kategori %}on{% endif %}" href="?tab={{ tab }}&kategori={{ kode }}{% if q %}&q={{ q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+      <a class="chip {% if kode == kategori %}on{% endif %}" href="?kategori={{ kode }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if sort != 'prioritas' %}&sort={{ sort }}{% endif %}{% if q %}&q={{ q }}{% endif %}#daftar-laporan">
         {% if kode == 'kebersihan' %}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
         {% elif kode == 'ac' %}
@@ -380,7 +385,7 @@
         {% elif kode == 'keamanan' %}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         {% elif kode == 'aksesibilitas' %}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><circle cx="12" cy="10" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
         {% else %}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
         {% endif %}
@@ -395,20 +400,20 @@
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
   <div>
     <h2 style="margin:0; font-size:20px;">
-      {% if tab == 'saya' %}Laporan Saya ({{ laporan_list|length }})
-      {% elif tab == 'didukung' %}Laporan yang Saya Dukung ({{ laporan_list|length }})
-      {% elif tab == 'mendesak' %}Laporan Mendesak ({{ laporan_list|length }})
-      {% elif tab == 'selesai' %}Laporan Selesai Diperbaiki ({{ laporan_list|length }})
+      {% if mode == 'saya' or tab == 'saya' %}Laporan Saya ({{ laporan_list|length }})
+      {% elif mode == 'didukung' or tab == 'didukung' %}Laporan yang Saya Dukung ({{ laporan_list|length }})
+      {% elif mode == 'mendesak' or tab == 'mendesak' %}Laporan Prioritas Mendesak ({{ laporan_list|length }})
+      {% elif mode == 'selesai' or tab == 'selesai' %}Laporan Selesai Diperbaiki ({{ laporan_list|length }})
       {% else %}Daftar Aspirasi & Laporan Kampus ({{ laporan_list|length }}){% endif %}
     </h2>
-    <p class="mu" style="margin:2px 0 0;">Dukungan warga kampus meningkatkan skor prioritas penanganan oleh staf fasilitas.</p>
+    <p class="mu" style="margin:2px 0 0;">Dukungan warga kampus menaikkan skor prioritas penanganan oleh tim fasilitas.</p>
   </div>
 </div>
 
 <!-- DAFTAR FEED KARTU LAPORAN -->
 <div style="display:flex; flex-direction:column; gap:16px;">
   {% for l in laporan_list %}
-  <div class="card card-hover" style="padding:20px; border-left: 5px solid {% if l.status == 'selesai' %}#059669{% elif l.status == 'dikerjakan' %}#D97706{% elif l.status == 'diverifikasi' %}#2563EB{% else %}#94A3B8{% endif %};">
+  <div id="laporan-{{ l.pk }}" class="card card-hover" style="scroll-margin-top: 90px; padding:20px; border-left: 5px solid {% if l.status == 'selesai' %}#059669{% elif l.status == 'dikerjakan' %}#D97706{% elif l.status == 'diverifikasi' %}#2563EB{% else %}#94A3B8{% endif %};">
     
     <!-- Top Bar: Tags & Status -->
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
@@ -439,7 +444,7 @@
       <div class="mu" style="font-size:12px; font-weight:500; display:inline-flex; align-items:center; gap:4px;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         {{ l.dibuat|date:"d M Y, H:i" }}
-        {% if l.target_selesai %}&nbsp;•&nbsp; <strong style="color:#CCFF00;">Target: {{ l.target_selesai|date:"d M Y" }}</strong>{% endif %}
+        {% if l.target_selesai %}&nbsp;•&nbsp; <strong style="color:#38BDF8;">Target: {{ l.target_selesai|date:"d M Y" }}</strong>{% endif %}
       </div>
     </div>
 
@@ -494,10 +499,10 @@
           <a href="{% url 'detail' l.pk %}" style="color:#FFFFFF; font-weight:700;">{{ l.judul }}</a>
         </h3>
 
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; font-size:13px; color:#A78BFA;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; font-size:13px; color:#94A3B8;">
           <span style="display:inline-flex; align-items:center; gap:3px;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-            <strong>{{ l.lokasi.nama }}</strong> ({{ l.lokasi.gedung }})
+            <strong style="color:#BAE6FD;">{{ l.lokasi.nama }}</strong> ({{ l.lokasi.gedung }})
           </span>
           <span>•</span>
           <span style="display:inline-flex; align-items:center; gap:3px;">
@@ -506,7 +511,7 @@
           </span>
         </div>
 
-        <p style="margin:0; font-size:14px; color:#DDD6FE; line-height:1.6;">
+        <p style="margin:0; font-size:14px; color:#BAE6FD; line-height:1.6;">
           {{ l.deskripsi|truncatechars:180 }}
         </p>
 
@@ -533,11 +538,11 @@
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'dukung' l.pk %}" style="margin:0;">
           {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <input type="hidden" name="next" value="{{ request.get_full_path }}#laporan-{{ l.pk }}">
           <button type="submit" class="btn sm {% if l.id in supported_ids %}btn-lime{% else %}alt{% endif %}" style="height:36px; padding:0 14px; border-radius:10px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3"/><path d="M10 22h7.5"/></svg>
             {% if l.id in supported_ids %}Didukung{% else %}Saya juga mengalami{% endif %}
-            <span style="background:{% if l.id in supported_ids %}rgba(11,8,24,0.3){% else %}rgba(255,255,255,0.15){% endif %}; color:{% if l.id in supported_ids %}#0B0818{% else %}#FFFFFF{% endif %}; padding:2px 7px; border-radius:999px; font-size:11px; margin-left:4px; font-weight:800;">
+            <span style="background:{% if l.id in supported_ids %}rgba(8,12,22,0.3){% else %}rgba(255,255,255,0.15){% endif %}; color:{% if l.id in supported_ids %}#080C16{% else %}#FFFFFF{% endif %}; padding:2px 7px; border-radius:999px; font-size:11px; margin-left:4px; font-weight:800;">
               {{ l.pendukung.count }}
             </span>
           </button>
@@ -550,7 +555,7 @@
         {% endif %}
 
         <!-- Comments Counter Link -->
-        <a href="{% url 'detail' l.pk %}#komentar" class="btn sm alt" style="height:36px; padding:0 12px; border-radius:10px; color:#DDD6FE;">
+        <a href="{% url 'detail' l.pk %}#komentar" class="btn sm alt" style="height:36px; padding:0 12px; border-radius:10px; color:#BAE6FD;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           {{ l.komentar.count }} Tanggapan
         </a>
@@ -558,7 +563,7 @@
 
       <!-- Detail Link -->
       <div>
-        <a href="{% url 'detail' l.pk %}" class="btn sm alt" style="height:36px; padding:0 16px; border-radius:10px; font-weight:600; border-color:rgba(168, 85, 247, 0.4); color:#DDD6FE;">
+        <a href="{% url 'detail' l.pk %}" class="btn sm alt" style="height:36px; padding:0 16px; border-radius:10px; font-weight:600; border-color:rgba(56, 189, 248, 0.35); color:#BAE6FD;">
           Lihat Perkembangan →
         </a>
       </div>
@@ -568,7 +573,7 @@
   </div>
   {% empty %}
   <div class="card" style="text-align:center; padding:48px 24px;">
-    <div style="margin-bottom:14px; color:#A78BFA;">
+    <div style="margin-bottom:14px; color:#38BDF8;">
       <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
     </div>
     <h3 style="margin:0 0 8px; font-size:18px; color:#FFFFFF;">Belum ada laporan di bagian ini</h3>
@@ -588,7 +593,7 @@
       <div>
         <span id="lightboxBadge" class="lightbox-badge">Kondisi Awal</span>
         <h3 id="lightboxTitle" style="margin:4px 0 0; font-size:16px; color:#FFFFFF; font-weight:700;">Judul Laporan</h3>
-        <p id="lightboxLocation" style="margin:3px 0 0; font-size:13px; color:#A78BFA; display:flex; align-items:center; gap:4px;">
+        <p id="lightboxLocation" style="margin:3px 0 0; font-size:13px; color:#94A3B8; display:flex; align-items:center; gap:4px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
           <span id="lightboxLocationText">Lokasi</span>
         </p>
@@ -599,7 +604,7 @@
       <img id="lightboxImg" src="" alt="Preview Foto Dokumentasi Fasilitas">
     </div>
     <div class="lightbox-footer">
-      <span style="font-size:12px; color:#A78BFA;">Tip: Klik di luar jendela atau tekan tombol <kbd style="background:rgba(255,255,255,0.15); color:#FFFFFF; padding:2px 6px; border-radius:4px; font-size:11px;">Esc</kbd> untuk menutup</span>
+      <span style="font-size:12px; color:#94A3B8;">Tip: Klik di luar jendela atau tekan tombol <kbd style="background:rgba(255,255,255,0.15); color:#FFFFFF; padding:2px 6px; border-radius:4px; font-size:11px;">Esc</kbd> untuk menutup</span>
       <a id="lightboxDetailBtn" href="#" class="btn btn-lime sm" style="text-decoration:none; padding:8px 18px; font-weight:800;">Lihat Detail Laporan Lengkap →</a>
     </div>
   </div>
@@ -619,20 +624,6 @@ function openLightbox(imgSrc, title, badge, location, detailUrl) {
     locElem.innerText = location;
   }
   document.getElementById('lightboxDetailBtn').href = detailUrl;
-
-  if (badge.includes('Perbaikan')) {
-    badgeElem.style.background = '#ECFDF5';
-    badgeElem.style.color = '#065F46';
-    badgeElem.style.border = '1px solid #A7F3D0';
-  } else {
-    badgeElem.style.background = '#FEE2E2';
-    badgeElem.style.color = '#991B1B';
-    badgeElem.style.border = '1px solid #FECACA';
-  }
-
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
 
   if (badge.includes('Perbaikan')) {
     badgeElem.style.background = '#ECFDF5';

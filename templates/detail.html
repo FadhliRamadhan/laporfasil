@@ -52,7 +52,7 @@
   </div>
 
   {% if l.target_selesai %}
-  <div style="margin: 8px 0 14px; padding: 8px 14px; background:rgba(204, 255, 0, 0.12); border:1px solid rgba(204, 255, 0, 0.35); border-radius:10px; display:inline-flex; align-items:center; gap:6px; font-size:13px; color:#CCFF00; font-weight:600;">
+  <div style="margin: 8px 0 14px; padding: 8px 14px; background:rgba(56, 189, 248, 0.12); border:1px solid rgba(56, 189, 248, 0.35); border-radius:10px; display:inline-flex; align-items:center; gap:6px; font-size:13px; color:#38BDF8; font-weight:600;">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
     <strong>Estimasi Target Selesai:</strong> {{ l.target_selesai|date:"d F Y" }}
   </div>
@@ -61,7 +61,7 @@
   {% if l.deskripsi %}
   <div style="margin: 14px 0; padding: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px;">
     <strong style="color:#FFFFFF;">Keterangan Keluhan / Masalah:</strong>
-    <p style="margin: 6px 0 0; line-height:1.6; color:#DDD6FE;">{{ l.deskripsi }}</p>
+    <p style="margin: 6px 0 0; line-height:1.6; color:#BAE6FD;">{{ l.deskripsi }}</p>
   </div>
   {% endif %}
 
@@ -142,7 +142,7 @@
         </span>
         <span class="mu" style="font-size:12px;">{{ k.dibuat|date:"d M Y H:i" }}</span>
       </div>
-      <p style="margin:0; font-size:14px; line-height:1.4; color:#DDD6FE;">{{ k.isi }}</p>
+      <p style="margin:0; font-size:14px; line-height:1.4; color:#BAE6FD;">{{ k.isi }}</p>
     </div>
     {% empty %}
     <p class="mu" style="margin:0;">Belum ada tanggapan atau informasi tambahan untuk laporan ini. Jadilah yang pertama berkomentar!</p>
@@ -194,7 +194,7 @@
 
     <p>
       <label for="foto_p" style="font-weight:600;">Unggah Foto Bukti Hasil Penanganan (Setelah):</label>
-      <input type="file" id="foto_p" name="foto_perbaikan" accept="image/*" style="padding:8px 10px; background:#F8FAFF; border:1px dashed #2F5BEA;">
+      <input type="file" id="foto_p" name="foto_perbaikan" accept="image/*" style="padding:8px 10px; background:rgba(14, 22, 41, 0.7); border:1px dashed rgba(56, 189, 248, 0.4); color:var(--ink);">
       <small class="mu" style="display:block; margin-top:4px;">Pilih foto bukti setelah perbaikan / pembersihan selesai dilakukan.</small>
     </p>
 
@@ -218,7 +218,7 @@
   <div class="row">
     <div>
       <span class="pill s-{{ r.status }}">{{ r.get_status_display }}</span>
-      {% if r.catatan %}<span style="font-size:13px; margin-left:8px; color:#374151;">— {{ r.catatan }}</span>{% endif %}
+      {% if r.catatan %}<span style="font-size:13px; margin-left:8px; color:#CBD5E1;">— {{ r.catatan }}</span>{% endif %}
     </div>
     <span class="mu" style="font-size:12px;">
       {{ r.waktu|date:"j M Y H:i" }}{% if r.oleh %} oleh <strong>{{ r.oleh.username }}</strong>{% endif %}

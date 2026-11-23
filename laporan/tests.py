@@ -165,3 +165,22 @@ class LaporanTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIn("text/csv", resp["Content-Type"])
         self.assertIn("attachment", resp["Content-Disposition"])
+
+    def test_halaman_halaman_khusus(self):
+        # 1. Halaman publik mendesak & selesai
+        resp_mendesak = self.client.get(reverse("mendesak"))
+        self.assertEqual(resp_mendesak.status_code, 200)
+
+        resp_selesai = self.client.get(reverse("selesai"))
+        self.assertEqual(resp_selesai.status_code, 200)
+
+        # 2. Halaman butuh login (laporan-saya, didukung-saya, profil)
+        self.assertEqual(self.client.get(reverse("laporan_saya")).status_code, 302)
+        self.assertEqual(self.client.get(reverse("didukung_saya")).status_code, 302)
+        self.assertEqual(self.client.get(reverse("profil")).status_code, 302)
+
+        # 3. Setelah login
+        self.client.login(username="rani", password="x12345678")
+        self.assertEqual(self.client.get(reverse("laporan_saya")).status_code, 200)
+        self.assertEqual(self.client.get(reverse("didukung_saya")).status_code, 200)
+        self.assertEqual(self.client.get(reverse("profil")).status_code, 200)

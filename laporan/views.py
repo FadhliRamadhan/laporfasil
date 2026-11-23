@@ -21,8 +21,8 @@ from .models import Komentar, Laporan, Lokasi, Pengumuman
 staf_only = user_passes_test(lambda u: u.is_staff, login_url="login")
 
 
-def beranda(request):
-    tab = request.GET.get("tab", "semua")
+def _ambil_laporan_data(request, mode="semua"):
+    tab = request.GET.get("tab") or mode
     kategori = request.GET.get("kategori", "")
     status_filter = request.GET.get("status", "")
     sort = request.GET.get("sort", "prioritas")
@@ -92,10 +92,13 @@ def beranda(request):
     ).distinct().count()
 
     supported_ids = set(request.user.dukungan.values_list("id", flat=True)) if request.user.is_authenticated else set()
+    show_banner = (mode == "semua" and tab == "semua")
 
-    return render(request, "beranda.html", {
+    return {
         "laporan_list": laporan_list,
         "tab": tab,
+        "mode": mode,
+        "show_banner": show_banner,
         "kategori": kategori,
         "status_filter": status_filter,
         "sort": sort,
@@ -108,6 +111,50 @@ def beranda(request):
         "selesai_bulan": selesai_bulan,
         "total_kampus": semua_laporan_count,
         "supported_ids": supported_ids,
+    }
+
+
+def beranda(request):
+    ctx = _ambil_laporan_data(request, mode="semua")
+    return render(request, "beranda.html", ctx)
+
+
+@login_required
+def laporan_saya(request):
+    ctx = _ambil_laporan_data(request, mode="saya")
+    return render(request, "beranda.html", ctx)
+
+
+@login_required
+def didukung_saya(request):
+    ctx = _ambil_laporan_data(request, mode="didukung")
+    return render(request, "beranda.html", ctx)
+
+
+def mendesak(request):
+    ctx = _ambil_laporan_data(request, mode="mendesak")
+    return render(request, "beranda.html", ctx)
+
+
+def selesai(request):
+    ctx = _ambil_laporan_data(request, mode="selesai")
+    return render(request, "beranda.html", ctx)
+
+
+@login_required
+def profil(request):
+    user_laporan = Laporan.objects.filter(pelapor=request.user).order_by("-dibuat")
+    total_laporan = user_laporan.count()
+    total_proses = user_laporan.exclude(status="selesai").count()
+    total_selesai = user_laporan.filter(status="selesai").count()
+    total_didukung = request.user.dukungan.count()
+    recent_laporan = [services.dengan_skor(l) for l in user_laporan[:5]]
+    return render(request, "profil.html", {
+        "total_laporan": total_laporan,
+        "total_proses": total_proses,
+        "total_selesai": total_selesai,
+        "total_didukung": total_didukung,
+        "recent_laporan": recent_laporan,
     })
 
 
