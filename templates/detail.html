@@ -59,15 +59,15 @@
   {% endif %}
 
   {% if l.deskripsi %}
-  <div style="margin: 14px 0; padding: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px;">
-    <strong style="color:#FFFFFF;">Keterangan Keluhan / Masalah:</strong>
-    <p style="margin: 6px 0 0; line-height:1.6; color:#BAE6FD;">{{ l.deskripsi }}</p>
+  <div style="margin: 14px 0; padding: 16px; background: var(--surface-subtle); border: 1px solid var(--ln); border-radius: 14px;">
+    <strong style="color:var(--ink);">Keterangan Keluhan / Masalah:</strong>
+    <p style="margin: 6px 0 0; line-height:1.6; color:var(--ink); opacity:0.9;">{{ l.deskripsi }}</p>
   </div>
   {% endif %}
 
   {% if l.foto %}
   <div style="margin: 16px 0;">
-    <strong style="display:flex; align-items:center; gap:6px; margin-bottom:8px; color:#FFFFFF;">
+    <strong style="display:flex; align-items:center; gap:6px; margin-bottom:8px; color:var(--ink);">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
       Foto Kondisi di Lapangan:
     </strong>
@@ -142,7 +142,7 @@
         </span>
         <span class="mu" style="font-size:12px;">{{ k.dibuat|date:"d M Y H:i" }}</span>
       </div>
-      <p style="margin:0; font-size:14px; line-height:1.4; color:#BAE6FD;">{{ k.isi }}</p>
+      <p style="margin:0; font-size:14px; line-height:1.4; color:var(--ink); opacity:0.9;">{{ k.isi }}</p>
     </div>
     {% empty %}
     <p class="mu" style="margin:0;">Belum ada tanggapan atau informasi tambahan untuk laporan ini. Jadilah yang pertama berkomentar!</p>

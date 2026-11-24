@@ -165,22 +165,22 @@
           🕒 {{ l.dibuat|date:"d M Y, H:i" }} &nbsp;•&nbsp; 
           💬 {{ l.komentar.count }} tanggapan
         </p>
-        <p style="margin:0; font-size:14px; color:#374151; line-height:1.4;">
+        <p style="margin:0; font-size:14px; color:var(--ink); opacity:0.9; line-height:1.4;">
           {{ l.deskripsi|truncatechars:180 }}
         </p>
 
         <!-- Informasi Hasil Perbaikan Jika Ada -->
         {% if l.catatan_perbaikan or l.foto_perbaikan %}
-        <div style="margin-top:10px; padding:10px 12px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px;">
+        <div style="margin-top:10px; padding:10px 12px; background:rgba(16, 185, 129, 0.12); border:1px solid rgba(16, 185, 129, 0.35); border-radius:8px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <strong style="color:#166534; font-size:12px;">🛠️ Catatan Tindakan Petugas:</strong>
-            {% if l.petugas %}<span style="font-size:11px; color:#15803D;">Oleh: {{ l.petugas.username }}</span>{% endif %}
+            <strong style="color:var(--success); font-size:12px;">🛠️ Catatan Tindakan Petugas:</strong>
+            {% if l.petugas %}<span style="font-size:11px; color:var(--ink); opacity:0.8;">Oleh: {{ l.petugas.username }}</span>{% endif %}
           </div>
-          <p style="margin:0; font-size:13px; color:#14532D;">
+          <p style="margin:0; font-size:13px; color:var(--ink); opacity:0.95;">
             {{ l.catatan_perbaikan|default:"Fasilitas telah diperiksa dan ditangani." }}
           </p>
           {% if l.selesai_pada %}
-          <small style="color:#166534; display:block; margin-top:4px;">Diselesaikan pada: {{ l.selesai_pada|date:"d M Y H:i" }}</small>
+          <small style="color:var(--success); display:block; margin-top:4px;">Diselesaikan pada: {{ l.selesai_pada|date:"d M Y H:i" }}</small>
           {% endif %}
         </div>
         {% endif %}

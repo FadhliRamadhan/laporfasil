@@ -2,39 +2,117 @@
 {% block title %}Profil Saya - LaporFasil{% endblock %}
 
 {% block content %}
+<style>
+.profile-header-card {
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--hero-bg);
+  border: 1px solid var(--hero-border);
+  box-shadow: var(--shadow-md);
+  color: var(--hero-text);
+}
+.profile-header-card h1 {
+  color: var(--hero-text) !important;
+}
+.profile-stat-box {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 14px 16px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--hero-text);
+  transition: all 0.2s ease;
+  display: block;
+}
+.profile-stat-box:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+}
+.profile-stat-box .stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--hero-subtext);
+  text-transform: uppercase;
+}
+.profile-stat-box .stat-num {
+  font-size: 26px;
+  font-weight: 800;
+  margin-top: 2px;
+  color: var(--hero-text);
+}
+
+.quick-card-title {
+  color: var(--ink);
+  font-size: 15px;
+  display: block;
+  font-weight: 700;
+}
+.quick-card-sub {
+  color: var(--mu);
+  font-size: 12px;
+}
+.recent-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--ln);
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+.recent-item:hover {
+  border-color: var(--primary-border);
+}
+.recent-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.recent-title:hover {
+  color: var(--primary);
+}
+</style>
+
 <div style="max-width: 900px; margin: 0 auto;">
   
   <!-- BACK BUTTON -->
   <div style="margin-bottom: 16px;">
-    <a href="{% url 'beranda' %}" class="btn sm alt" style="border: 1px solid var(--ln); display: inline-flex; align-items: center; gap: 6px;">
+    <a href="{% url 'beranda' %}" class="btn sm alt" style="display: inline-flex; align-items: center; gap: 6px;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       Kembali ke Beranda
     </a>
   </div>
 
   <!-- PROFILE HEADER CARD -->
-  <div class="card" style="padding: 28px; margin-bottom: 24px; position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(16, 28, 54, 0.85) 0%, rgba(11, 18, 36, 0.95) 100%);">
+  <div class="profile-header-card">
     <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
       <!-- Avatar Circle -->
-      <div style="width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; color: #080C16; box-shadow: 0 0 24px rgba(56, 189, 248, 0.5); border: 3px solid rgba(255, 255, 255, 0.2); flex-shrink: 0;">
+      <div style="width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; color: #FFFFFF; box-shadow: 0 0 24px rgba(56, 189, 248, 0.5); border: 3px solid rgba(255, 255, 255, 0.3); flex-shrink: 0;">
         {{ user.username|make_list|first|upper }}
       </div>
 
       <!-- Info Details -->
       <div style="flex: 1; min-width: 220px;">
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
-          <h1 style="margin: 0; font-size: 24px; color: #FFFFFF;">{{ user.username }}</h1>
+          <h1 style="margin: 0; font-size: 24px;">{{ user.username }}</h1>
           {% if user.is_staff %}
-          <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #6EE7B7; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 12px; padding: 2px 8px;">
+          <span class="badge" style="background: rgba(16, 185, 129, 0.25); color: #A7F3D0; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 12px; padding: 2px 8px;">
             Staf Fasilitas
           </span>
           {% else %}
-          <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #7DD3FC; border: 1px solid rgba(56, 189, 248, 0.35); font-size: 12px; padding: 2px 8px;">
+          <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #BAE6FD; border: 1px solid rgba(56, 189, 248, 0.4); font-size: 12px; padding: 2px 8px;">
             Warga Kampus / Mahasiswa
           </span>
           {% endif %}
         </div>
-        <p class="mu" style="margin: 0; font-size: 14px;">
+        <p style="margin: 0; font-size: 14px; color: var(--hero-subtext);">
           Terdaftar sejak {{ user.date_joined|date:"d F Y" }} &bull; Sivitas Akademika Kampus
         </p>
       </div>
@@ -52,71 +130,71 @@
     </div>
 
     <!-- STATS OVERVIEW RIBBON -->
-    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
-      <a href="{% url 'laporan_saya' %}" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(56, 189, 248, 0.15); padding: 14px 16px; border-radius: 14px; text-decoration: none; color: #fff; transition: all 0.2s ease; display: block;">
-        <div style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Total Laporan</div>
-        <div style="font-size: 26px; font-weight: 800; margin-top: 2px; color: #FFFFFF;">{{ total_laporan }}</div>
+    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.15); display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+      <a href="{% url 'laporan_saya' %}" class="profile-stat-box">
+        <div class="stat-label">Total Laporan</div>
+        <div class="stat-num">{{ total_laporan }}</div>
         <div style="height: 3px; width: 36px; background: #38BDF8; border-radius: 99px; margin-top: 6px; box-shadow: 0 0 8px #38BDF8;"></div>
       </a>
 
-      <a href="{% url 'laporan_saya' %}?status=dikerjakan" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(245, 158, 11, 0.2); padding: 14px 16px; border-radius: 14px; text-decoration: none; color: #fff; transition: all 0.2s ease; display: block;">
-        <div style="font-size: 11px; font-weight: 700; color: #FDE68A; text-transform: uppercase;">Sedang Dikerjakan</div>
-        <div style="font-size: 26px; font-weight: 800; margin-top: 2px; color: #FFFFFF;">{{ total_proses }}</div>
+      <a href="{% url 'laporan_saya' %}?status=dikerjakan" class="profile-stat-box">
+        <div class="stat-label" style="color: #FDE68A;">Sedang Dikerjakan</div>
+        <div class="stat-num">{{ total_proses }}</div>
         <div style="height: 3px; width: 36px; background: #F59E0B; border-radius: 99px; margin-top: 6px; box-shadow: 0 0 8px #F59E0B;"></div>
       </a>
 
-      <a href="{% url 'selesai' %}" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(16, 185, 129, 0.2); padding: 14px 16px; border-radius: 14px; text-decoration: none; color: #fff; transition: all 0.2s ease; display: block;">
-        <div style="font-size: 11px; font-weight: 700; color: #6EE7B7; text-transform: uppercase;">Terselesaikan</div>
-        <div style="font-size: 26px; font-weight: 800; margin-top: 2px; color: #FFFFFF;">{{ total_selesai }}</div>
+      <a href="{% url 'selesai' %}" class="profile-stat-box">
+        <div class="stat-label" style="color: #6EE7B7;">Terselesaikan</div>
+        <div class="stat-num">{{ total_selesai }}</div>
         <div style="height: 3px; width: 36px; background: #10B981; border-radius: 99px; margin-top: 6px; box-shadow: 0 0 8px #10B981;"></div>
       </a>
 
-      <a href="{% url 'didukung_saya' %}" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(56, 189, 248, 0.25); padding: 14px 16px; border-radius: 14px; text-decoration: none; color: #fff; transition: all 0.2s ease; display: block;">
-        <div style="font-size: 11px; font-weight: 700; color: #38BDF8; text-transform: uppercase;">Isu Didukung</div>
-        <div style="font-size: 26px; font-weight: 800; margin-top: 2px; color: #FFFFFF;">{{ total_didukung }}</div>
+      <a href="{% url 'didukung_saya' %}" class="profile-stat-box">
+        <div class="stat-label" style="color: #BAE6FD;">Isu Didukung</div>
+        <div class="stat-num">{{ total_didukung }}</div>
         <div style="height: 3px; width: 36px; background: #38BDF8; border-radius: 99px; margin-top: 6px; box-shadow: 0 0 8px #38BDF8;"></div>
       </a>
     </div>
   </div>
 
   <!-- MENU NAVIGASI CEPAT -->
-  <h2 style="font-size: 18px; margin: 0 0 14px; color: #FFFFFF;">Akses Cepat Halaman</h2>
+  <h2 style="font-size: 18px; margin: 0 0 14px;">Akses Cepat Halaman</h2>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 28px;">
     
     <a href="{% url 'laporan_saya' %}" class="card card-hover" style="text-decoration: none; padding: 18px; border-left: 4px solid #38BDF8; display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(56, 189, 248, 0.15); display: flex; align-items: center; justify-content: center; color: #38BDF8;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
         </div>
         <div>
-          <strong style="color: #FFFFFF; font-size: 15px; display: block;">Laporan Saya</strong>
-          <span style="color: #94A3B8; font-size: 12px;">Lihat semua laporan yang Anda kirim</span>
+          <strong class="quick-card-title">Laporan Saya</strong>
+          <span class="quick-card-sub">Lihat semua laporan yang Anda kirim</span>
         </div>
       </div>
-      <span style="color: #38BDF8; font-weight: bold;">&rarr;</span>
+      <span style="color: var(--primary); font-weight: bold;">&rarr;</span>
     </a>
 
     <a href="{% url 'didukung_saya' %}" class="card card-hover" style="text-decoration: none; padding: 18px; border-left: 4px solid #38BDF8; display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(56, 189, 248, 0.15); display: flex; align-items: center; justify-content: center; color: #38BDF8;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3"/><path d="M10 22h7.5"/></svg>
         </div>
         <div>
-          <strong style="color: #FFFFFF; font-size: 15px; display: block;">Laporan Didukung</strong>
-          <span style="color: #94A3B8; font-size: 12px;">Daftar fasilitas yang Anda beri dukungan</span>
+          <strong class="quick-card-title">Laporan Didukung</strong>
+          <span class="quick-card-sub">Daftar fasilitas yang Anda beri dukungan</span>
         </div>
       </div>
-      <span style="color: #38BDF8; font-weight: bold;">&rarr;</span>
+      <span style="color: var(--primary); font-weight: bold;">&rarr;</span>
     </a>
 
     <a href="{% url 'buat' %}" class="card card-hover" style="text-decoration: none; padding: 18px; border-left: 4px solid #10B981; display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: #10B981;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--success-light); display: flex; align-items: center; justify-content: center; color: var(--success);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </div>
         <div>
-          <strong style="color: #FFFFFF; font-size: 15px; display: block;">Buat Laporan Baru</strong>
-          <span style="color: #94A3B8; font-size: 12px;">Sampaikan kendala fasilitas baru</span>
+          <strong class="quick-card-title">Buat Laporan Baru</strong>
+          <span class="quick-card-sub">Sampaikan kendala fasilitas baru</span>
         </div>
       </div>
       <span style="color: #10B981; font-weight: bold;">+</span>
@@ -125,12 +203,12 @@
     {% if user.is_staff %}
     <a href="{% url 'dashboard' %}" class="card card-hover" style="text-decoration: none; padding: 18px; border-left: 4px solid #F59E0B; display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(245, 158, 11, 0.15); display: flex; align-items: center; justify-content: center; color: #F59E0B;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--warning-light); display: flex; align-items: center; justify-content: center; color: var(--warning);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         </div>
         <div>
-          <strong style="color: #FFFFFF; font-size: 15px; display: block;">Dashboard Staf</strong>
-          <span style="color: #94A3B8; font-size: 12px;">Kelola penanganan fasilitas kampus</span>
+          <strong class="quick-card-title">Dashboard Staf</strong>
+          <span class="quick-card-sub">Kelola penanganan fasilitas kampus</span>
         </div>
       </div>
       <span style="color: #F59E0B; font-weight: bold;">&rarr;</span>
@@ -141,17 +219,17 @@
 
   <!-- AKTIVITAS TERBARU PENGGUNA -->
   <div class="card" style="padding: 22px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 12px;">
-      <h2 style="font-size: 18px; margin: 0; color: #FFFFFF;">Laporan Terbaru yang Anda Ajukan</h2>
-      <a href="{% url 'laporan_saya' %}" style="font-size: 13px; color: #38BDF8; text-decoration: none; font-weight: 600;">Lihat Semua &rarr;</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--ln); padding-bottom: 12px;">
+      <h2 style="font-size: 18px; margin: 0;">Laporan Terbaru yang Anda Ajukan</h2>
+      <a href="{% url 'laporan_saya' %}" style="font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 600;">Lihat Semua &rarr;</a>
     </div>
 
     {% if recent_laporan %}
     <div style="display: flex; flex-direction: column; gap: 12px;">
       {% for l in recent_laporan %}
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 12px 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;">
+      <div class="recent-item">
         <div>
-          <a href="{% url 'detail' l.pk %}" style="font-weight: 700; font-size: 15px; color: #FFFFFF; text-decoration: none;">
+          <a href="{% url 'detail' l.pk %}" class="recent-title">
             {{ l.judul }}
           </a>
           <p class="mu" style="margin: 4px 0 0; font-size: 12px;">
@@ -166,7 +244,7 @@
       {% endfor %}
     </div>
     {% else %}
-    <div style="text-align: center; padding: 30px 10px; color: #94A3B8;">
+    <div style="text-align: center; padding: 30px 10px; color: var(--mu);">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px; opacity: 0.6;"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
       <p style="margin: 0 0 12px;">Anda belum pernah mengirimkan laporan fasilitas.</p>
       <a href="{% url 'buat' %}" class="btn sm btn-lime">+ Ajukan Laporan Pertama</a>
