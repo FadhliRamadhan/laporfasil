@@ -179,8 +179,78 @@ class LaporanTests(TestCase):
         self.assertEqual(self.client.get(reverse("didukung_saya")).status_code, 302)
         self.assertEqual(self.client.get(reverse("profil")).status_code, 302)
 
-        # 3. Setelah login
+        # 3. Setelah login (mahasiswa)
         self.client.login(username="rani", password="x12345678")
         self.assertEqual(self.client.get(reverse("laporan_saya")).status_code, 200)
         self.assertEqual(self.client.get(reverse("didukung_saya")).status_code, 200)
         self.assertEqual(self.client.get(reverse("profil")).status_code, 200)
+
+    def test_staf_langsung_ke_dashboard(self):
+        # 1. Staf login dan diarahkan langsung ke dashboard
+        resp_login = self.client.post(reverse("login"), {
+            "username": "staf",
+            "password": "x12345678"
+        })
+        self.assertRedirects(resp_login, reverse("dashboard"))
+
+        # 2. Staf membuka beranda ('/') langsung diarahkan ke dashboard
+        resp_beranda = self.client.get(reverse("beranda"))
+        self.assertRedirects(resp_beranda, reverse("dashboard"))
+
+        # 3. Staf membuka profil langsung diarahkan ke dashboard
+        resp_profil = self.client.get(reverse("profil"))
+        self.assertRedirects(resp_profil, reverse("dashboard"))
+
+        # 4. Staf membuka laporan-saya langsung diarahkan ke dashboard
+        resp_saya = self.client.get(reverse("laporan_saya"))
+        self.assertRedirects(resp_saya, reverse("dashboard"))
+
+        # 5. Staf selalu diarahkan ke dashboard kerja, tidak ada feed yang menduplikasi dashboard
+        resp_publik = self.client.get(reverse("beranda"), {"publik": "1"})
+        self.assertRedirects(resp_publik, reverse("dashboard"))
+
+    def test_kelola_pengumuman_pemeliharaan(self):
+        from .models import Pengumuman
+
+        # 1. Mahasiswa tidak boleh mengakses halaman pemeliharaan
+        self.client.login(username="rani", password="x12345678")
+        self.assertEqual(self.client.get(reverse("kelola_pengumuman")).status_code, 302)
+
+        # 2. Staf dapat membuka halaman pemeliharaan
+        self.client.login(username="staf", password="x12345678")
+        resp = self.client.get(reverse("kelola_pengumuman"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Publikasi Info Pemeliharaan")
+
+        # 3. Staf menerbitkan info baru
+        resp_post = self.client.post(reverse("kelola_pengumuman"), {
+            "judul": "Pemadaman Listrik Sementara Gedung Fasilkom",
+            "tipe": "pemeliharaan",
+            "isi": "Pemeliharaan panel daya listrik utama pada hari Sabtu pukul 09.00-12.00.",
+            "aktif": "on",
+        })
+        self.assertRedirects(resp_post, reverse("kelola_pengumuman"))
+        p = Pengumuman.objects.get(judul="Pemadaman Listrik Sementara Gedung Fasilkom")
+        self.assertEqual(p.tipe, "pemeliharaan")
+        self.assertTrue(p.aktif)
+
+        # 4. Staf mengedit info tersebut
+        resp_edit_get = self.client.get(reverse("edit_pengumuman", args=[p.pk]))
+        self.assertEqual(resp_edit_get.status_code, 200)
+        self.assertContains(resp_edit_get, "Edit Info Pemeliharaan")
+
+        resp_edit_post = self.client.post(reverse("edit_pengumuman", args=[p.pk]), {
+            "judul": "Pemadaman Listrik Diundur ke Minggu",
+            "tipe": "darurat",
+            "isi": "Jadwal dialihkan ke hari Minggu pukul 13.00-15.00 WIB.",
+            "aktif": "on",
+        })
+        self.assertRedirects(resp_edit_post, reverse("kelola_pengumuman"))
+        p.refresh_from_db()
+        self.assertEqual(p.judul, "Pemadaman Listrik Diundur ke Minggu")
+        self.assertEqual(p.tipe, "darurat")
+
+        # 5. Staf menghapus info pemeliharaan
+        resp_hapus = self.client.post(reverse("hapus_pengumuman", args=[p.pk]))
+        self.assertRedirects(resp_hapus, reverse("kelola_pengumuman"))
+        self.assertFalse(Pengumuman.objects.filter(pk=p.pk).exists())

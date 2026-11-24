@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+{% block title %}{% if edit_mode %}Edit Info Pemeliharaan - LaporFasil{% else %}Publikasi Info Pemeliharaan - LaporFasil{% endif %}{% endblock %}
+
+{% block content %}
+<style>
+.pengumuman-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+@media (min-width: 901px) {
+  .pengumuman-container {
+    display: grid;
+    grid-template-columns: 400px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+}
+
+.pengumuman-form-card {
+  padding: 24px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  box-sizing: border-box;
+  width: 100%;
+  position: static;
+}
+
+@media (min-width: 901px) {
+  .pengumuman-form-card {
+    position: sticky;
+    top: 86px;
+    z-index: 10;
+  }
+}
+
+.notice-card {
+  padding: 20px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.notice-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: var(--shadow-md);
+}
+
+.notice-card.type-pemeliharaan {
+  border-left: 4px solid #F59E0B;
+}
+
+.notice-card.type-darurat {
+  border-left: 4px solid #EF4444;
+}
+
+.notice-card.type-info {
+  border-left: 4px solid #38BDF8;
+}
+
+.badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-tag.type-pemeliharaan {
+  background: rgba(245, 158, 11, 0.15);
+  color: #F59E0B;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.badge-tag.type-darurat {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.badge-tag.type-info {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.badge-status-on {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.badge-status-off {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--mu);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--input-text);
+  font: inherit;
+  font-size: 13.5px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #38BDF8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+.form-group select option {
+  background: var(--select-option-bg);
+  color: var(--input-text);
+}
+
+.btn-action-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--ln);
+  background: var(--btn-alt-bg);
+  color: var(--ink);
+  transition: all 0.15s ease;
+}
+
+.btn-action-icon:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38BDF8;
+  color: #38BDF8;
+}
+
+.btn-action-delete:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #EF4444;
+  color: #EF4444;
+}
+</style>
+
+<!-- HEADER SECTION -->
+<div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+  <div>
+    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.25); padding:4px 14px; border-radius:9999px; font-size:12px; font-weight:700; color:#38BDF8; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:10px;">
+      <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#38BDF8;"></span>
+      Manajemen Pemeliharaan Kampus
+    </div>
+    <h1 style="margin:0 0 6px; font-size:26px;">Publikasi Info Pemeliharaan</h1>
+    <p class="mu" style="margin:0; font-size:14px; max-width:700px;">
+      Kelola dan publikasikan jadwal pemeliharaan berkala, perbaikan utilitas, pemadaman listrik/air, serta pemberitahuan penting untuk seluruh civitas kampus.
+    </p>
+  </div>
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <a href="{% url 'dashboard' %}" class="btn sm btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Dashboard Staf
+    </a>
+    <a href="{% url 'qr_daftar' %}" class="btn sm alt" style="display:inline-flex; align-items:center; gap:6px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3"/><rect width="7" height="7" x="14" y="3"/><rect width="7" height="7" x="14" y="14"/><rect width="7" height="7" x="3" y="14"/></svg>
+      Kode QR Ruangan
+    </a>
+  </div>
+</div>
+
+<div class="pengumuman-container">
+  <!-- FORMULIR INPUT / EDIT -->
+  <div class="pengumuman-form-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--ln); padding-bottom:12px;">
+      <h2 style="margin:0; font-size:17px; color:var(--ink);">
+        {% if edit_mode %}
+          Edit Info Pemeliharaan
+        {% else %}
+          Terbitkan Info Baru
+        {% endif %}
+      </h2>
+      {% if edit_mode %}
+      <a href="{% url 'kelola_pengumuman' %}" style="font-size:12px; color:var(--mu); text-decoration:none;">Batal Edit</a>
+      {% endif %}
+    </div>
+
+    <form method="post" action="{% if edit_mode %}{% url 'edit_pengumuman' target_pengumuman.pk %}{% else %}{% url 'kelola_pengumuman' %}{% endif %}" style="margin:0;">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="id_judul">Judul Pemberitahuan:</label>
+        <input type="text" id="id_judul" name="judul" value="{{ form.judul.value|default:'' }}" required placeholder="Contoh: Pembersihan Berkala AC Lantai 2">
+        {% if form.judul.errors %}
+          <small style="color:#EF4444;">{{ form.judul.errors.0 }}</small>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_tipe">Kategori / Tipe:</label>
+        <select id="id_tipe" name="tipe">
+          <option value="pemeliharaan" {% if form.tipe.value == 'pemeliharaan' %}selected{% endif %}>Jadwal Pemeliharaan / Cleaning</option>
+          <option value="info" {% if form.tipe.value == 'info' %}selected{% endif %}>Informasi Umum Fasilitas</option>
+          <option value="darurat" {% if form.tipe.value == 'darurat' %}selected{% endif %}>Penting / Perhatian Khusus</option>
+        </select>
+        {% if form.tipe.errors %}
+          <small style="color:#EF4444;">{{ form.tipe.errors.0 }}</small>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_isi">Rincian Informasi:</label>
+        <textarea id="id_isi" name="isi" rows="4" required placeholder="Tuliskan tanggal, durasi pengerjaan, area terdampak, dan instruksi bagi civitas...">{{ form.isi.value|default:'' }}</textarea>
+        {% if form.isi.errors %}
+          <small style="color:#EF4444;">{{ form.isi.errors.0 }}</small>
+        {% endif %}
+      </div>
+
+      <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+        <input type="checkbox" id="id_aktif" name="aktif" {% if form.aktif.value or not edit_mode %}checked{% endif %} style="width:18px; height:18px; cursor:pointer;">
+        <label for="id_aktif" style="margin:0; font-size:13px; cursor:pointer;">Tampilkan ke publik (Aktif di Beranda)</label>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button type="submit" class="btn btn-primary" style="flex:1; justify-content:center; display:inline-flex; align-items:center; gap:6px;">
+          {% if edit_mode %}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Simpan Perubahan
+          {% else %}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Publikasikan Info
+          {% endif %}
+        </button>
+        {% if edit_mode %}
+        <a href="{% url 'kelola_pengumuman' %}" class="btn alt" style="display:inline-flex; align-items:center;">Batal</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- DAFTAR PENGUMUMAN PEMELIHARAAN -->
+  <div style="min-width:0; width:100%;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="margin:0; font-size:18px; color:var(--ink);">Daftar Info Pemeliharaan ({{ pengumuman_list|length }})</h2>
+      <span class="mu" style="font-size:13px;">Diurutkan terbaru</span>
+    </div>
+
+    {% for p in pengumuman_list %}
+    <div class="notice-card type-{{ p.tipe }}">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span class="badge-tag type-{{ p.tipe }}">
+            {% if p.tipe == 'pemeliharaan' %}
+              Jadwal Pemeliharaan
+            {% elif p.tipe == 'darurat' %}
+              Penting / Perhatian
+            {% else %}
+              Informasi Umum
+            {% endif %}
+          </span>
+
+          {% if p.aktif %}
+            <span class="badge-tag badge-status-on">Aktif Ditampilkan</span>
+          {% else %}
+            <span class="badge-tag badge-status-off">Nonaktif / Diarsipkan</span>
+          {% endif %}
+        </div>
+
+        <span class="mu" style="font-size:12px;">{{ p.dibuat|date:"d M Y, H:i" }}</span>
+      </div>
+
+      <h3 style="margin:0 0 8px; font-size:16px; color:var(--ink); font-weight:700;">{{ p.judul }}</h3>
+      <p style="margin:0 0 16px; font-size:13.5px; color:var(--ink); opacity:0.9; line-height:1.6; white-space:pre-line;">{{ p.isi }}</p>
+
+      <div style="display:flex; justify-content:flex-end; align-items:center; gap:8px; border-top:1px solid var(--ln); padding-top:12px;">
+        <a href="{% url 'edit_pengumuman' p.pk %}" class="btn-action-icon" title="Edit isi pengumuman ini">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Edit
+        </a>
+
+        <form method="post" action="{% url 'hapus_pengumuman' p.pk %}" style="display:inline; margin:0;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus info pemeliharaan \'{{ p.judul|escapejs }}\'? Tindakan ini tidak dapat dibatalkan.');">
+          {% csrf_token %}
+          <button type="submit" class="btn-action-icon btn-action-delete" title="Hapus pengumuman ini secara permanen">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            Hapus
+          </button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <div class="card" style="text-align:center; padding:40px 20px;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--mu); margin-bottom:12px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3 style="margin:0 0 6px; font-size:16px;">Belum Ada Info Pemeliharaan</h3>
+      <p class="mu" style="font-size:13px; margin:0;">Gunakan formulir di sebelah kiri untuk mempublikasikan jadwal pemeliharaan baru.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

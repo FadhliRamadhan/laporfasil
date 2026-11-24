@@ -115,12 +115,17 @@ def _ambil_laporan_data(request, mode="semua"):
 
 
 def beranda(request):
+    # Staf yang bertugas langsung diarahkan ke Dashboard Manajemen Staf
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect("dashboard")
     ctx = _ambil_laporan_data(request, mode="semua")
     return render(request, "beranda.html", ctx)
 
 
 @login_required
 def laporan_saya(request):
+    if request.user.is_staff:
+        return redirect("dashboard")
     ctx = _ambil_laporan_data(request, mode="saya")
     return render(request, "beranda.html", ctx)
 
@@ -143,6 +148,9 @@ def selesai(request):
 
 @login_required
 def profil(request):
+    # Staf langsung diarahkan ke dashboard kerja staf
+    if request.user.is_staff:
+        return redirect("dashboard")
     user_laporan = Laporan.objects.filter(pelapor=request.user).order_by("-dibuat")
     total_laporan = user_laporan.count()
     total_proses = user_laporan.exclude(status="selesai").count()
@@ -346,13 +354,57 @@ def dashboard(request):
 
 
 @staf_only
+def kelola_pengumuman(request):
+    form = PengumumanForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Info pemeliharaan / pengumuman kampus berhasil dipublikasikan.")
+        return redirect("kelola_pengumuman")
+    
+    pengumuman_list = Pengumuman.objects.all().order_by("-dibuat")
+    return render(request, "kelola_pengumuman.html", {
+        "form": form,
+        "pengumuman_list": pengumuman_list,
+        "edit_mode": False,
+    })
+
+
+@staf_only
+def edit_pengumuman(request, pk):
+    pengumuman = get_object_or_404(Pengumuman, pk=pk)
+    form = PengumumanForm(request.POST or None, instance=pengumuman)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, f"Info pemeliharaan '{pengumuman.judul}' berhasil diperbarui.")
+        return redirect("kelola_pengumuman")
+    
+    pengumuman_list = Pengumuman.objects.all().order_by("-dibuat")
+    return render(request, "kelola_pengumuman.html", {
+        "form": form,
+        "pengumuman_list": pengumuman_list,
+        "edit_mode": True,
+        "target_pengumuman": pengumuman,
+    })
+
+
+@staf_only
+@require_POST
+def hapus_pengumuman(request, pk):
+    pengumuman = get_object_or_404(Pengumuman, pk=pk)
+    judul = pengumuman.judul
+    pengumuman.delete()
+    messages.success(request, f"Info pemeliharaan '{judul}' berhasil dihapus.")
+    return redirect("kelola_pengumuman")
+
+
+@staf_only
 @require_POST
 def tambah_pengumuman(request):
     form = PengumumanForm(request.POST)
     if form.is_valid():
         form.save()
         messages.success(request, "Pengumuman pemeliharaan / informasi kampus berhasil dipublikasikan.")
-    return redirect("dashboard")
+    return redirect("kelola_pengumuman")
 
 
 @staf_only
@@ -408,6 +460,9 @@ def qr(request, kode):
 def daftar(request):
     form = UserCreationForm(request.POST or None)
     if form.is_valid():
-        login(request, form.save())
+        user = form.save()
+        login(request, user)
+        if user.is_staff:
+            return redirect("dashboard")
         return redirect("beranda")
     return render(request, "registration/daftar.html", {"form": form})

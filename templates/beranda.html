@@ -304,7 +304,14 @@
 <div class="hero">
   <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
     <div>
-      {% if user.is_authenticated %}
+      {% if user.is_authenticated and user.is_staff %}
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); padding:4px 14px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:12px; color:#6EE7B7;">
+        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
+        Mode Pratinjau Staf • {{ user.first_name|default:user.username }}
+      </div>
+      <h1>Feed Aspirasi & Keluhan Mahasiswa</h1>
+      <p>Pratinjau tampilan feed publik keluhan fasilitas dan aspirasi mahasiswa di seluruh kampus.</p>
+      {% elif user.is_authenticated %}
       <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(56,189,248,0.25); padding:4px 14px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:12px;">
         <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#38BDF8; box-shadow:0 0 8px #38BDF8;"></span>
         Selamat Datang, {{ user.first_name|default:user.username }}
@@ -318,14 +325,19 @@
     </div>
 
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      {% if user.is_staff %}
+      <a href="{% url 'dashboard' %}" class="btn btn-lime" style="font-weight:800; font-size:14px; padding:0 20px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Kembali ke Dashboard Staf
+      </a>
+      <a href="{% url 'buat' %}" class="btn alt" style="backdrop-filter:blur(14px);">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Buat Laporan
+      </a>
+      {% else %}
       <a href="{% url 'buat' %}" class="btn btn-lime" style="font-weight:800; font-size:14px; padding:0 20px;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Buat Laporan Baru
-      </a>
-      {% if user.is_staff %}
-      <a href="{% url 'dashboard' %}" class="btn alt" style="backdrop-filter:blur(14px);">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        Dashboard Staf
       </a>
       {% endif %}
     </div>
@@ -333,7 +345,29 @@
 
   <!-- STATISTIK SUMMARY RIBBON -->
   <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.12); display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px;">
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.is_staff %}
+    <!-- METRIK KHUSUS STAF: LINK LANGSUNG KE DASHBOARD MANAJEMEN -->
+    <a href="{% url 'dashboard' %}" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(56,189,248,0.15); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.04em;">Total Laporan Kampus</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ total_kampus }}</div>
+      <div style="height:3px; width:42px; background:#38BDF8; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #38BDF8;"></div>
+    </a>
+    <a href="{% url 'dashboard' %}?status=dilaporkan" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(239,68,68,0.25); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#FCA5A5; text-transform:uppercase; letter-spacing:0.04em;">Perlu Penanganan</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ aktif }}</div>
+      <div style="height:3px; width:42px; background:#EF4444; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #EF4444;"></div>
+    </a>
+    <a href="{% url 'dashboard' %}?status=dikerjakan" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(245,158,11,0.2); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#FDE68A; text-transform:uppercase; letter-spacing:0.04em;">Sedang Dikerjakan</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ aktif }}</div>
+      <div style="height:3px; width:42px; background:#F59E0B; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #F59E0B;"></div>
+    </a>
+    <a href="{% url 'dashboard' %}?status=selesai" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(16,185,129,0.2); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
+      <div style="font-size:11px; font-weight:700; color:#6EE7B7; text-transform:uppercase; letter-spacing:0.04em;">Selesai Bulan Ini</div>
+      <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ selesai_bulan }}</div>
+      <div style="height:3px; width:42px; background:#10B981; border-radius:99px; margin-top:6px; box-shadow:0 0 8px #10B981;"></div>
+    </a>
+    {% elif user.is_authenticated %}
     <a href="{% url 'laporan_saya' %}" style="background:rgba(255,255,255,0.05); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(56,189,248,0.15); padding:14px 16px; border-radius:14px; text-decoration:none; color:#fff; transition:all 0.2s ease; display:block;">
       <div style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.04em;">Laporan Saya</div>
       <div style="font-size:26px; font-weight:800; margin-top:2px; color:#FFFFFF;">{{ user_stats.total }}</div>
